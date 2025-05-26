@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+   .news-gradient {
+      background: linear-gradient(180deg, #bb1e1e 0%, #b21919 100%);
+   }
+}
