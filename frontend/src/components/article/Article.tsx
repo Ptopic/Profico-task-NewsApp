@@ -33,17 +33,20 @@ const Article = ({
 
       article.dateAddedToFavourites = dateAddedToFavourites;
 
-      isFavourite(article.url)
-         ? setFavouriteArticles((prev) =>
-              prev && prev.length > 0
-                 ? prev.filter(
-                      (articleToRemove) => article.url !== articleToRemove.url
-                   )
-                 : []
-           )
-         : setFavouriteArticles((prev) =>
-              prev && prev.length > 0 ? [article, ...prev] : [article]
-           );
+      const stored = localStorage.getItem('favourites');
+
+      let favourites: IArticle[] = stored ? JSON.parse(stored) : [];
+
+      if (isFavourite(article.url)) {
+         favourites = favourites.filter(
+            (articleToRemove) => article.url !== articleToRemove.url
+         );
+      } else {
+         favourites = [article, ...favourites];
+      }
+
+      localStorage.setItem('favourites', JSON.stringify(favourites));
+      setFavouriteArticles(favourites);
    };
 
    return (

@@ -13,7 +13,7 @@ import usePaginationParams from '@shared/hooks/usePaginationParams';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const HomePage = () => {
-   const NEWS_PAGE_SIZE = 20;
+   const NEWS_PAGE_SIZE = 50;
 
    const { searchValue } = usePaginationParams();
 
@@ -25,23 +25,24 @@ const HomePage = () => {
 
    useEffect(() => {
       const favouritesFromLocalStorage = localStorage.getItem('favourites');
-      const favourites = favouritesFromLocalStorage
-         ? JSON.parse(favouritesFromLocalStorage)
-         : [];
-
       setFavouriteArticles(
-         favourites.sort((a: IArticle, b: IArticle) => {
-            return (
-               new Date(b.dateAddedToFavourites).getTime() -
-               new Date(a.dateAddedToFavourites).getTime()
-            );
-         })
+         favouritesFromLocalStorage
+            ? JSON.parse(favouritesFromLocalStorage)
+            : []
       );
    }, []);
 
-   useEffect(() => {
-      localStorage.setItem('favourites', JSON.stringify(favouriteArticles));
-   }, [favouriteArticles]);
+   const filteredAndSortedFavourites = favouriteArticles
+      .filter(
+         (article: IArticle) =>
+            !searchValue ||
+            article.title.toLowerCase().includes(searchValue.toLowerCase())
+      )
+      .sort(
+         (a: IArticle, b: IArticle) =>
+            new Date(b.dateAddedToFavourites).getTime() -
+            new Date(a.dateAddedToFavourites).getTime()
+      );
 
    const newsGridRef = useRef<HTMLDivElement>(null);
 
@@ -102,9 +103,23 @@ const HomePage = () => {
                   <p className='text-lg font-bold leading-6 text-black600'>
                      News
                   </p>
+
                   {isLoading ? (
                      <div className='flex h-full w-full items-center justify-center'>
                         <PulsatingDotsSpinner colorClassName='bg-red500' />
+                     </div>
+                  ) : articles.length === 0 && category !== 'favourites' ? (
+                     <div className='flex h-[50%] w-full items-center justify-center'>
+                        <p className='text-[28px] font-black leading-[21px] text-black500'>
+                           No news found
+                        </p>
+                     </div>
+                  ) : favouriteArticles.length === 0 &&
+                    category === 'favourites' ? (
+                     <div className='flex h-[50%] w-full items-center justify-center'>
+                        <p className='text-[28px] font-black leading-[21px] text-black500'>
+                           No favourites found
+                        </p>
                      </div>
                   ) : (
                      <div
@@ -132,7 +147,7 @@ const HomePage = () => {
                            <RegularArticlesGrid
                               category={category}
                               articles={articles}
-                              favouriteArticles={favouriteArticles}
+                              favouriteArticles={filteredAndSortedFavourites}
                               setFavouriteArticles={setFavouriteArticles}
                               isFetchingNextPage={isFetchingNextPage}
                            />
