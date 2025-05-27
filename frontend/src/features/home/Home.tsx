@@ -2,7 +2,10 @@
 
 import useGetTopHeadlinesNews from '@api/news/hooks/useGetTopHeadlinesNews';
 import { IArticle } from '@api/news/types';
-import Article from '@components/article';
+import {
+   HomeArticlesGrid,
+   RegularArticlesGrid,
+} from '@components/articlesGrid';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import Search from '@components/search';
 import Sidebar from '@components/sidebar';
@@ -111,42 +114,22 @@ const HomePage = () => {
                         }}
                         ref={newsGridRef}
                      >
-                        <div
-                           className='grid h-full w-full gap-6'
-                           style={{
-                              gridTemplateColumns:
-                                 'repeat(auto-fill, minmax(320px, 1fr))',
-                              gridAutoRows: '300px',
-                              placeItems: 'center',
-                           }}
-                        >
-                           {category === 'favourites'
-                              ? favouriteArticles.map((article: IArticle) => (
-                                   <Article
-                                      key={article.title}
-                                      article={article}
-                                      favouriteArticles={favouriteArticles}
-                                      setFavouriteArticles={
-                                         setFavouriteArticles
-                                      }
-                                   />
-                                ))
-                              : articles.map((article: IArticle) => (
-                                   <Article
-                                      key={article.title}
-                                      article={article}
-                                      favouriteArticles={favouriteArticles}
-                                      setFavouriteArticles={
-                                         setFavouriteArticles
-                                      }
-                                   />
-                                ))}
-                           {isFetchingNextPage && (
-                              <div className='col-span-full flex w-full justify-center py-4'>
-                                 <PulsatingDotsSpinner colorClassName='bg-red500' />
-                              </div>
-                           )}
-                        </div>
+                        {category === '' ? (
+                           <HomeArticlesGrid
+                              articles={articles}
+                              favouriteArticles={favouriteArticles}
+                              setFavouriteArticles={setFavouriteArticles}
+                              isFetchingNextPage={isFetchingNextPage}
+                           />
+                        ) : (
+                           <RegularArticlesGrid
+                              category={category}
+                              articles={articles}
+                              favouriteArticles={favouriteArticles}
+                              setFavouriteArticles={setFavouriteArticles}
+                              isFetchingNextPage={isFetchingNextPage}
+                           />
+                        )}
                      </div>
                   )}
                </div>

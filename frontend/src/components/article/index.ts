@@ -1,3 +1,4 @@
 import Article from './Article';
+import BreakingNewsArticle from './BreakingNewsArticle';
 
-export default Article;
+export { Article, BreakingNewsArticle };

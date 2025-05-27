@@ -13,6 +13,7 @@ const config: Config = {
             red500: '#BB1E1E',
             white500: '#FFFFFF',
             white600: '#F4F5F8',
+            white700: '#F8F5F2',
             black500: '#000000',
             black600: '#1D1D1B',
             blue500: '#1E71BB',
