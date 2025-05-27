@@ -68,7 +68,7 @@ const HomePage = () => {
 
    return (
       <div className='h-[calc(100dvh-90px)] w-full'>
-         <nav className='news-gradient fixed left-0 top-0 z-30 flex h-[60px] w-full items-center justify-between px-[11vw]'>
+         <nav className='news-gradient fixed left-0 top-0 z-30 flex h-[60px] w-full items-center justify-between px-[11dvw]'>
             <div className='flex flex-row items-center gap-10'>
                <p className='font-bold leading-[21px] text-white500'>
                   Make MyNews your homepage
@@ -86,7 +86,7 @@ const HomePage = () => {
                </button>
             </div>
          </nav>
-         <div className='mt-[90px] flex h-full w-full flex-col items-center gap-6 px-[11vw]'>
+         <div className='mt-[90px] flex h-full w-full flex-col items-center gap-6 px-[11dvw]'>
             <div className='flex w-full flex-row items-center justify-between'>
                <p className='text-[32px] font-black leading-[100%] text-red500'>
                   My<span className='text-black600'>News</span>
