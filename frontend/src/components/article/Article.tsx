@@ -27,6 +27,10 @@ const Article = ({
    };
 
    const toggleBookmark = (article: IArticle): void => {
+      const dateAddedToFavourites = new Date();
+
+      article.dateAddedToFavourites = dateAddedToFavourites;
+
       isFavourite(article.url)
          ? setFavouriteArticles((prev) =>
               prev && prev.length > 0
@@ -36,7 +40,7 @@ const Article = ({
                  : []
            )
          : setFavouriteArticles((prev) =>
-              prev && prev.length > 0 ? [...prev, article] : [article]
+              prev && prev.length > 0 ? [article, ...prev] : [article]
            );
    };
 

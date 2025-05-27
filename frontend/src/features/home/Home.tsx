@@ -29,7 +29,14 @@ const HomePage = () => {
          ? JSON.parse(favouritesFromLocalStorage)
          : [];
 
-      setFavouriteArticles(favourites);
+      setFavouriteArticles(
+         favourites.sort((a: IArticle, b: IArticle) => {
+            return (
+               new Date(b.dateAddedToFavourites).getTime() -
+               new Date(a.dateAddedToFavourites).getTime()
+            );
+         })
+      );
    }, []);
 
    useEffect(() => {

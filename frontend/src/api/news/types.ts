@@ -9,6 +9,7 @@ export interface IArticle {
    url: string;
    urlToImage: string;
    publishedAt: string;
+   dateAddedToFavourites: Date;
    source: {
       name: string;
    };
