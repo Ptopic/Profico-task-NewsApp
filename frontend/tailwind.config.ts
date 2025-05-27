@@ -16,6 +16,8 @@ const config: Config = {
             black500: '#000000',
             black600: '#1D1D1B',
             blue500: '#1E71BB',
+            gray500: '#7B7A7C',
+            divider: '#979797',
          },
          screens: {
             xxs: '370px',

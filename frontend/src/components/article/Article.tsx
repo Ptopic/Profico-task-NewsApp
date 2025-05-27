@@ -1,0 +1,98 @@
+import { IArticle } from '@api/news/types';
+import { FavouritesIcon } from '@shared/svgs';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Dispatch, SetStateAction } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+interface IProps {
+   article: IArticle;
+   favouriteArticles: IArticle[];
+   setFavouriteArticles: Dispatch<SetStateAction<IArticle[]>>;
+}
+
+const Article = ({
+   article,
+   favouriteArticles,
+   setFavouriteArticles,
+}: IProps) => {
+   const isFavourite = (url: string): boolean => {
+      return (
+         favouriteArticles &&
+         favouriteArticles.length > 0 &&
+         favouriteArticles.filter((article) => {
+            return url == article.url;
+         }).length > 0
+      );
+   };
+
+   const toggleBookmark = (article: IArticle): void => {
+      isFavourite(article.url)
+         ? setFavouriteArticles((prev) =>
+              prev && prev.length > 0
+                 ? prev.filter(
+                      (articleToRemove) => article.url !== articleToRemove.url
+                   )
+                 : []
+           )
+         : setFavouriteArticles((prev) =>
+              prev && prev.length > 0 ? [...prev, article] : [article]
+           );
+   };
+
+   return (
+      <Link
+         href={article.url}
+         target='_blank'
+         className='flex h-[300px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer'
+         style={{ boxShadow: '0px 1px 2px -1px #c8cad1' }}
+      >
+         {article.urlToImage ? (
+            <div className='relative left-0 top-0 h-[180px] w-full overflow-hidden rounded-tl-lg rounded-tr-lg'>
+               <Image
+                  src={article.urlToImage}
+                  alt={article.title}
+                  fill
+                  className='rounded-tl-lg rounded-tr-lg object-cover'
+               />
+            </div>
+         ) : (
+            <div className='flex h-[180px] w-full items-center justify-center rounded-tl-lg rounded-tr-lg bg-gray-200'>
+               <span className='text-gray-500'>No Image</span>
+            </div>
+         )}
+         <div className='flex h-[110px] w-full flex-col justify-between p-3'>
+            <div className='flex flex-col gap-1'>
+               <p className='text-[10px] font-bold uppercase leading-4 text-blue500'>
+                  {article.source.name}
+               </p>
+               <div className='flex flex-row items-start justify-between gap-2'>
+                  <p className='line-clamp-2 font-medium leading-5 text-black500'>
+                     {article.title}
+                  </p>
+                  <button
+                     className='justify-cente z-50 flex size-[24px] flex-shrink-0 items-center hover:cursor-pointer'
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        toggleBookmark(article);
+                     }}
+                  >
+                     <FavouritesIcon
+                        className={twMerge(
+                           'fill-none text-gray500/50',
+                           isFavourite(article.url) && 'fill-red500 text-red500'
+                        )}
+                     />
+                  </button>
+               </div>
+            </div>
+            <p className='text-[12px] leading-none text-black600'>
+               {article.author}
+            </p>
+         </div>
+      </Link>
+   );
+};
+
+export default Article;

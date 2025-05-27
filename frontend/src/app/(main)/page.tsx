@@ -1,7 +1,7 @@
 import HomePage from '@features/home/Home';
 import { COOKIE_NAME } from '@shared/constants';
 import { getSSRQueryClient } from '@shared/queryClient';
-import { EARNING, getCookie, getMetadataTitle } from '@shared/utils';
+import { getCookie, getMetadataTitle } from '@shared/utils';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -16,7 +16,7 @@ export async function generateMetadata(
       title: getMetadataTitle('Home'),
       openGraph: {
          title: getMetadataTitle('Home'),
-         url: `${parentOpengraphUrl}${EARNING}`,
+         url: `${parentOpengraphUrl}/home`,
          ...openGraphImage,
       },
    };

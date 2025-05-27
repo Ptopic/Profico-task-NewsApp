@@ -16,6 +16,7 @@
       "@typescript-eslint/eslint-plugin": "^7.1.0",
       "axios": "^1.6.7",
       "cookies-next": "^5.0.2",
+      "framer-motion": "^12.15.0",
       "jwt-decode": "^4.0.0",
       "next": "^15.2.2",
       "nextjs-toploader": "^3.7.15",
