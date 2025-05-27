@@ -30,7 +30,7 @@ const RegularArticlesGrid = ({
          {category === 'favourites'
             ? favouriteArticles.map((article: IArticle) => (
                  <Article
-                    key={article.title}
+                    key={article.url}
                     article={article}
                     favouriteArticles={favouriteArticles}
                     setFavouriteArticles={setFavouriteArticles}
@@ -38,7 +38,7 @@ const RegularArticlesGrid = ({
               ))
             : articles.map((article: IArticle) => (
                  <Article
-                    key={article.title}
+                    key={article.url}
                     article={article}
                     favouriteArticles={favouriteArticles}
                     setFavouriteArticles={setFavouriteArticles}

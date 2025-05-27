@@ -2,7 +2,7 @@ import { IArticle } from '@api/news/types';
 import { FavouritesIcon } from '@shared/svgs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface IProps {
@@ -16,6 +16,8 @@ const Article = ({
    favouriteArticles,
    setFavouriteArticles,
 }: IProps) => {
+   const [imgLoadingError, setImgLoadingError] = useState(false);
+
    const isFavourite = (url: string): boolean => {
       return (
          favouriteArticles &&
@@ -51,18 +53,21 @@ const Article = ({
          className='flex h-[300px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer'
          style={{ boxShadow: '0px 1px 2px -1px #c8cad1' }}
       >
-         {article.urlToImage ? (
+         {article.urlToImage && !imgLoadingError ? (
             <div className='relative left-0 top-0 h-[180px] w-full overflow-hidden rounded-tl-lg rounded-tr-lg'>
                <Image
                   src={article.urlToImage}
                   alt={article.title}
                   fill
                   className='rounded-tl-lg rounded-tr-lg object-cover'
+                  onError={() => setImgLoadingError(true)}
                />
             </div>
          ) : (
             <div className='flex h-[180px] w-full items-center justify-center rounded-tl-lg rounded-tr-lg bg-gray-200'>
-               <span className='text-gray-500'>No Image</span>
+               <p className='text-[32px] font-black leading-[100%] text-red500'>
+                  My<span className='text-black600'>News</span>
+               </p>
             </div>
          )}
          <div className='flex h-[110px] w-full flex-col justify-between p-3'>

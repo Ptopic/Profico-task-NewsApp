@@ -1,5 +1,6 @@
 import { IArticle } from '@api/news/types';
 import { Article, BreakingNewsArticle } from '@components/article';
+import LatestNews from '@components/latestNews';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -21,7 +22,7 @@ const HomeArticlesGrid = ({
          className='grid h-full w-full gap-6'
          style={{
             gridTemplateColumns: 'repeat(3, 1fr)',
-            placeItems: 'center',
+            placeItems: 'stretch',
          }}
       >
          <div
@@ -41,14 +42,14 @@ const HomeArticlesGrid = ({
             >
                {articles.slice(0, 3).map((article: IArticle) => (
                   <Article
-                     key={article.title}
+                     key={article.url}
                      article={article}
                      favouriteArticles={favouriteArticles}
                      setFavouriteArticles={setFavouriteArticles}
                   />
                ))}
                {articles.slice(3, 4).map((article: IArticle) => (
-                  <BreakingNewsArticle key={article.title} article={article} />
+                  <BreakingNewsArticle key={article.url} article={article} />
                ))}
             </div>
          </div>
@@ -60,7 +61,7 @@ const HomeArticlesGrid = ({
             }}
          >
             <div className='grid h-full w-full gap-6'>
-               <p>Latest news</p>
+               <LatestNews />
             </div>
          </div>
          <div
@@ -80,7 +81,7 @@ const HomeArticlesGrid = ({
             >
                {articles.slice(4).map((article: IArticle) => (
                   <Article
-                     key={article.title}
+                     key={article.url}
                      article={article}
                      favouriteArticles={favouriteArticles}
                      setFavouriteArticles={setFavouriteArticles}

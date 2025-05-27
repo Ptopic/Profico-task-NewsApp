@@ -73,7 +73,7 @@ const HomePage = () => {
                <p className='font-bold leading-[21px] text-white500'>
                   Make MyNews your homepage
                </p>
-               <p className='font-lightleading-[21px] text-sm text-white500'>
+               <p className='text-sm font-light leading-[21px] text-white500'>
                   Every day discover what’s trending on the internet!
                </p>
             </div>
@@ -108,7 +108,7 @@ const HomePage = () => {
                      </div>
                   ) : (
                      <div
-                        className='newsScrollbar flex h-[70dvh] flex-col gap-6 overflow-y-scroll'
+                        className='newsScrollbar flex h-[80dvh] flex-col gap-6 overflow-y-scroll'
                         onScroll={(e) => {
                            const target = e.target as HTMLElement;
                            const scrollPosition =
