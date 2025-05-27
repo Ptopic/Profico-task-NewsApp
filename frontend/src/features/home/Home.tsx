@@ -121,7 +121,7 @@ const HomePage = () => {
                         }}
                         ref={newsGridRef}
                      >
-                        {category === '' ? (
+                        {category === '' && searchValue === '' ? (
                            <HomeArticlesGrid
                               articles={articles}
                               favouriteArticles={favouriteArticles}
