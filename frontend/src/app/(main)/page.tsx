@@ -1,6 +1,9 @@
-import HomePage from '@features/home/Home';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
+import { newsApi } from '@api/news/requests';
+import HomePage from '@features/home';
 import { COOKIE_NAME } from '@shared/constants';
 import { getSSRQueryClient } from '@shared/queryClient';
+import { NEWS_LATEST, NEWS_TOP_HEADLINES } from '@shared/queryKeys';
 import { getCookie, getMetadataTitle } from '@shared/utils';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { openGraphImage } from 'metadata/openGraphImage';
@@ -16,7 +19,7 @@ export async function generateMetadata(
       title: getMetadataTitle('Home'),
       openGraph: {
          title: getMetadataTitle('Home'),
-         url: `${parentOpengraphUrl}/home`,
+         url: `${parentOpengraphUrl}/`,
          ...openGraphImage,
       },
    };
@@ -25,29 +28,16 @@ export async function generateMetadata(
 const Home = async () => {
    const queryClient = getSSRQueryClient();
 
-   // await Promise.all([
-   //   queryClient.prefetchQuery({
-   //     queryKey: instancesQueryKey,
-   //     queryFn: () =>
-   //       instancesServerRequests.getInstances({
-   //         page,
-   //         pageSize,
-   //         search,
-   //         gpu,
-   //         region,
-   //         sortField: sortField,
-   //         sortDirection: sortDirection,
-   //       }),
-   //   }),
-   //   queryClient.prefetchQuery({
-   //     queryKey: [GPU_NAMES],
-   //     queryFn: () => instancesServerRequests.getMachinesGpuName(),
-   //   }),
-   //   queryClient.prefetchQuery({
-   //     queryKey: [CURRENT_USER],
-   //     queryFn: () => authServerRequests.authCurrentUser(),
-   //   }),
-   // ]);
+   await Promise.all([
+      queryClient.prefetchQuery({
+         queryKey: [NEWS_TOP_HEADLINES, '', '', DEFAULT_PAGE_SIZE],
+         queryFn: () => newsApi.client.getTopHeadlinesNews(),
+      }),
+      queryClient.prefetchQuery({
+         queryKey: [NEWS_LATEST, DEFAULT_PAGE, DEFAULT_PAGE_SIZE],
+         queryFn: () => newsApi.client.getLatestNews(),
+      }),
+   ]);
 
    const dehydratedState = dehydrate(queryClient);
 

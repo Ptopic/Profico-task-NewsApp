@@ -1,3 +1,4 @@
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { withClientRequest } from '@api/requestBuilder/client/withClientRequest';
 import { withServerRequest } from '@api/requestBuilder/server/withServerRequest';
 import { ICallableRequestBuilder } from '@api/requestBuilder/types';
@@ -10,8 +11,8 @@ const getTopHeadlinesNews =
    async (
       search?: string,
       category?: string,
-      page?: number,
-      pageSize?: number
+      page: number = DEFAULT_PAGE,
+      pageSize: number = DEFAULT_PAGE_SIZE
    ) => {
       const params = {
          sortBy: 'publishedAt',
@@ -31,7 +32,10 @@ const getTopHeadlinesNews =
 
 const getLatestNews =
    (request: ICallableRequestBuilder<IArticleResponse>) =>
-   async (page?: number, pageSize?: number) => {
+   async (
+      page: number = DEFAULT_PAGE,
+      pageSize: number = DEFAULT_PAGE_SIZE
+   ) => {
       const params = {
          sortBy: 'publishedAt',
          page,
