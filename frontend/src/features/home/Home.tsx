@@ -6,7 +6,7 @@ import {
    HomeArticlesGrid,
    RegularArticlesGrid,
 } from '@components/articlesGrid';
-import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
+import LoadingWrapper from '@components/loadingWrapper';
 import Search from '@components/search';
 import Sidebar from '@components/sidebar';
 import usePaginationParams from '@shared/hooks/usePaginationParams';
@@ -114,17 +114,16 @@ const HomePage = () => {
                      News
                   </p>
 
-                  {isLoading ? (
-                     <div className='flex h-full w-full items-center justify-center'>
-                        <PulsatingDotsSpinner colorClassName='bg-red500' />
-                     </div>
-                  ) : articles.length === 0 && category !== 'favourites' ? (
+                  {!isLoading &&
+                  articles.length === 0 &&
+                  category !== 'favourites' ? (
                      <div className='flex h-[50%] w-full items-center justify-center'>
                         <p className='text-[28px] font-black leading-[21px] text-black500'>
                            No news found
                         </p>
                      </div>
-                  ) : favouriteArticles.length === 0 &&
+                  ) : !isLoading &&
+                    favouriteArticles.length === 0 &&
                     category === 'favourites' ? (
                      <div className='flex h-[50%] w-full items-center justify-center'>
                         <p className='text-[28px] font-black leading-[21px] text-black500'>
@@ -132,24 +131,29 @@ const HomePage = () => {
                         </p>
                      </div>
                   ) : (
-                     <div className='flex h-full flex-col gap-6 pb-10'>
-                        {category === '' && searchValue === '' ? (
-                           <HomeArticlesGrid
-                              articles={articles}
-                              favouriteArticles={favouriteArticles}
-                              setFavouriteArticles={setFavouriteArticles}
-                              isFetchingNextPage={isFetchingNextPage}
-                           />
-                        ) : (
-                           <RegularArticlesGrid
-                              category={category}
-                              articles={articles}
-                              favouriteArticles={filteredAndSortedFavourites}
-                              setFavouriteArticles={setFavouriteArticles}
-                              isFetchingNextPage={isFetchingNextPage}
-                           />
-                        )}
-                     </div>
+                     <LoadingWrapper
+                        isLoading={isLoading}
+                        className='h-[70dvh]'
+                     >
+                        <div className='flex h-full flex-col gap-6 pb-10'>
+                           {category === '' && searchValue === '' ? (
+                              <HomeArticlesGrid
+                                 articles={articles}
+                                 favouriteArticles={favouriteArticles}
+                                 setFavouriteArticles={setFavouriteArticles}
+                                 isFetchingNextPage={isFetchingNextPage}
+                              />
+                           ) : (
+                              <RegularArticlesGrid
+                                 category={category}
+                                 articles={articles}
+                                 favouriteArticles={filteredAndSortedFavourites}
+                                 setFavouriteArticles={setFavouriteArticles}
+                                 isFetchingNextPage={isFetchingNextPage}
+                              />
+                           )}
+                        </div>
+                     </LoadingWrapper>
                   )}
                </div>
             </div>

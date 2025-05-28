@@ -19,10 +19,10 @@ const BreakingNewsArticle = ({ article }: IProps) => {
                   Breaking
                </p>
             </div>
-            <p className='line-clamp-5 break-words text-center text-[25px] font-black leading-[29px] text-white500'>
+            <p className='line-clamp-4 break-words text-center text-[25px] font-black leading-[29px] text-white500'>
                {article.title}
             </p>
-            <p className='text-white700 break-words text-center text-[12px] font-light leading-none'>
+            <p className='break-words text-center text-[12px] font-light leading-none text-white700'>
                {article.author}
             </p>
          </div>

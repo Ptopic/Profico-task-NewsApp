@@ -1,4 +1,29 @@
+import useGetLatestNews from '@api/news/hooks/useGetLatestNews';
+import LoadingWrapper from '@components/loadingWrapper';
+import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
+import { useCallback, useRef } from 'react';
+import LatestNewsDivider from './LatestNewsDivider';
+import LatestNewsItem from './LatestNewsItem';
+
 const LatestNews = () => {
+   const LATEST_NEWS_PAGE_SIZE = 40;
+
+   const {
+      articles,
+      isLoading,
+      isFetchingNextPage,
+      hasNextPage,
+      fetchNextPage,
+   } = useGetLatestNews(LATEST_NEWS_PAGE_SIZE);
+
+   const handleEndReached = useCallback(() => {
+      if (hasNextPage && !isFetchingNextPage) {
+         fetchNextPage();
+      }
+   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+   const latestNewsGridRef = useRef<HTMLDivElement>(null);
+
    return (
       <div
          className='flex max-h-[528px] flex-col gap-3 rounded-lg bg-white500 p-3'
@@ -10,15 +35,42 @@ const LatestNews = () => {
             </div>
             <p className='font-medium leading-5'>Latest news</p>
          </div>
-         <div className='flex flex-grow-0 flex-col gap-1 overflow-y-scroll'>
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-            <div className='h-[100px] w-full flex-shrink-0 bg-red500' />
-         </div>
+         {!isLoading && articles.length === 0 ? (
+            <div className='flex h-full w-full items-center justify-center'>
+               <p className='text-[28px] font-black leading-[21px] text-black500'>
+                  No news found
+               </p>
+            </div>
+         ) : (
+            <LoadingWrapper isLoading={isLoading}>
+               <div
+                  className='newsScrollbar flex flex-grow-0 flex-col gap-2 overflow-y-scroll'
+                  onScroll={(e) => {
+                     const target = e.target as HTMLElement;
+                     const scrollPosition =
+                        target.scrollTop + target.clientHeight;
+                     const scrollHeight = target.scrollHeight;
+
+                     if (scrollPosition >= scrollHeight) {
+                        handleEndReached();
+                     }
+                  }}
+                  ref={latestNewsGridRef}
+               >
+                  {articles.map((article) => (
+                     <div className='flex flex-col gap-2' key={article.url}>
+                        <LatestNewsItem article={article} />
+                        <LatestNewsDivider />
+                     </div>
+                  ))}
+                  {isFetchingNextPage && (
+                     <div className='col-span-full flex w-full justify-center py-4'>
+                        <PulsatingDotsSpinner colorClassName='bg-red500' />
+                     </div>
+                  )}
+               </div>
+            </LoadingWrapper>
+         )}
       </div>
    );
 };
