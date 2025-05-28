@@ -9,7 +9,10 @@ import {
 import LoadingWrapper from '@components/loadingWrapper';
 import Search from '@components/search';
 import Sidebar from '@components/sidebar';
+import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
 import usePaginationParams from '@shared/hooks/usePaginationParams';
+import { toastError } from '@shared/utils/toast';
+import { error } from 'console';
 import { useCallback, useEffect, useState } from 'react';
 
 const HomePage = () => {
@@ -50,6 +53,7 @@ const HomePage = () => {
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
+      error,
    } = useGetTopHeadlinesNews(searchValue, category, NEWS_PAGE_SIZE);
 
    const handleEndReached = useCallback(() => {
@@ -74,6 +78,15 @@ const HomePage = () => {
    useEffect(() => {
       window.scrollTo({ top: 0 });
    }, [category]);
+
+   useEffect(() => {
+      if (error) {
+         toastError({
+            title: DEFAULT_ERROR_MESSAGE,
+            description: error.message,
+         });
+      }
+   }, [error]);
 
    return (
       <div className='h-full w-full'>

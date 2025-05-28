@@ -1,15 +1,14 @@
 'use client';
 
+import Providers from '@shared/providers';
 import { ReactNode } from 'react';
 
-import ReactQueryProvider from '@shared/providers/ReactQueryProvider';
-
 interface IProps {
-  children: ReactNode;
+   children: ReactNode;
 }
 
 const App = ({ children }: IProps) => {
-  return <ReactQueryProvider>{children}</ReactQueryProvider>;
+   return <Providers>{children}</Providers>;
 };
 
 export default App;

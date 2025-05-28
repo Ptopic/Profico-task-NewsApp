@@ -1,9 +1,11 @@
 import useGetLatestNews from '@api/news/hooks/useGetLatestNews';
 import LoadingWrapper from '@components/loadingWrapper';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import LatestNewsDivider from './LatestNewsDivider';
 import LatestNewsItem from './LatestNewsItem';
+import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
+import { toastError } from '@shared/utils/toast';
 
 const LatestNews = () => {
    const LATEST_NEWS_PAGE_SIZE = 40;
@@ -14,6 +16,7 @@ const LatestNews = () => {
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
+      error,
    } = useGetLatestNews(LATEST_NEWS_PAGE_SIZE);
 
    const handleEndReached = useCallback(() => {
@@ -21,6 +24,15 @@ const LatestNews = () => {
          fetchNextPage();
       }
    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+   useEffect(() => {
+      if (error) {
+         toastError({
+            title: DEFAULT_ERROR_MESSAGE,
+            description: error.message,
+         });
+      }
+   }, [error]);
 
    const latestNewsGridRef = useRef<HTMLDivElement>(null);
 
