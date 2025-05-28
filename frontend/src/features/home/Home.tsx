@@ -10,7 +10,7 @@ import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import Search from '@components/search';
 import Sidebar from '@components/sidebar';
 import usePaginationParams from '@shared/hooks/usePaginationParams';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const HomePage = () => {
    const NEWS_PAGE_SIZE = 50;
@@ -44,8 +44,6 @@ const HomePage = () => {
             new Date(a.dateAddedToFavourites).getTime()
       );
 
-   const newsGridRef = useRef<HTMLDivElement>(null);
-
    const {
       articles,
       isLoading,
@@ -74,11 +72,8 @@ const HomePage = () => {
    }, [handleEndReached]);
 
    useEffect(() => {
-      if (newsGridRef.current && !isLoading) {
-         newsGridRef.current.scrollTop = 0;
-         newsGridRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-   }, [category, isLoading]);
+      window.scrollTo({ top: 0 });
+   }, [category]);
 
    return (
       <div className='h-full w-full'>
@@ -137,10 +132,7 @@ const HomePage = () => {
                         </p>
                      </div>
                   ) : (
-                     <div
-                        className='flex h-full flex-col gap-6 pb-10'
-                        ref={newsGridRef}
-                     >
+                     <div className='flex h-full flex-col gap-6 pb-10'>
                         {category === '' && searchValue === '' ? (
                            <HomeArticlesGrid
                               articles={articles}
