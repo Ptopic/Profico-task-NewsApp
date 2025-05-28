@@ -21,6 +21,7 @@ const config: Config = {
             gray600: '#8D8D8C',
             divider: '#979797',
             green500: '#0F856C',
+            overlay: 'rgba(71, 72, 73, 0.8)',
          },
          screens: {
             xxs: '370px',

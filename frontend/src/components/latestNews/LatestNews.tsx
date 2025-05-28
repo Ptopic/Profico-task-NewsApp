@@ -1,15 +1,21 @@
+'use client';
+
 import useGetLatestNews from '@api/news/hooks/useGetLatestNews';
 import LoadingWrapper from '@components/loadingWrapper';
+import Modal from '@components/modal';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
 import { ChevronRightIcon } from '@shared/svgs';
 import { toastError } from '@shared/utils/toast';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import LatestNewsDivider from './LatestNewsDivider';
 import LatestNewsItem from './LatestNewsItem';
 
 const LatestNews = () => {
    const LATEST_NEWS_PAGE_SIZE = 20;
+
+   const [isAllLatestNewsModalOpen, setIsAllLatestNewsModalOpen] =
+      useState<boolean>(false);
 
    const {
       articles,
@@ -85,10 +91,46 @@ const LatestNews = () => {
                </div>
             </LoadingWrapper>
          )}
-         <button className='flex flex-row items-center gap-1'>
+         <button
+            className='flex flex-row items-center gap-1'
+            onClick={() => setIsAllLatestNewsModalOpen(true)}
+         >
             <p className='text-sm leading-5 text-blue500'>See all news</p>
             <ChevronRightIcon className='size-3 text-black600' />
          </button>
+
+         <Modal
+            isOpen={isAllLatestNewsModalOpen}
+            setIsOpen={setIsAllLatestNewsModalOpen}
+            modalTitle='All latest news'
+            className='full w-full overflow-visible'
+         >
+            <div
+               className='newsScrollbar flex flex-grow-0 flex-col gap-2 overflow-y-scroll'
+               onScroll={(e) => {
+                  const target = e.target as HTMLElement;
+                  const scrollPosition = target.scrollTop + target.clientHeight;
+                  const scrollHeight = target.scrollHeight;
+
+                  if (scrollPosition >= scrollHeight) {
+                     handleEndReached();
+                  }
+               }}
+               ref={latestNewsGridRef}
+            >
+               {articles.map((article, idx) => (
+                  <div className='flex flex-col gap-2' key={article.url}>
+                     <LatestNewsItem article={article} />
+                     {idx !== articles.length - 1 && <LatestNewsDivider />}
+                  </div>
+               ))}
+               {isFetchingNextPage && (
+                  <div className='col-span-full flex w-full justify-center py-4'>
+                     <PulsatingDotsSpinner colorClassName='bg-red500' />
+                  </div>
+               )}
+            </div>
+         </Modal>
       </div>
    );
 };
