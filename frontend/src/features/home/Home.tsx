@@ -251,9 +251,9 @@ const HomePage = () => {
                   ) : (
                      <LoadingWrapper
                         isLoading={isLoading}
-                        className='h-[70dvh]'
+                        className='h-[70dvh] lg:hidden'
                      >
-                        <div className='flex h-full w-full pb-10'>
+                        <div className='flex h-full w-full pb-10 lg:hidden'>
                            <LatestNews />
                         </div>
                      </LoadingWrapper>

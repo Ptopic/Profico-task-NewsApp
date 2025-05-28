@@ -2,6 +2,7 @@ import useGetLatestNews from '@api/news/hooks/useGetLatestNews';
 import LoadingWrapper from '@components/loadingWrapper';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
+import { ChevronRightIcon } from '@shared/svgs';
 import { toastError } from '@shared/utils/toast';
 import { useCallback, useEffect, useRef } from 'react';
 import LatestNewsDivider from './LatestNewsDivider';
@@ -84,6 +85,10 @@ const LatestNews = () => {
                </div>
             </LoadingWrapper>
          )}
+         <button className='flex flex-row items-center gap-1'>
+            <p className='text-sm leading-5 text-blue500'>See all news</p>
+            <ChevronRightIcon className='size-3 text-black600' />
+         </button>
       </div>
    );
 };

@@ -53,7 +53,7 @@ const Article = ({
       <Link
          href={article.url}
          target='_blank'
-         className='flex h-[252px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer'
+         className='flex h-[232px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer lg:h-[252px]'
          style={{ boxShadow: '0px 1px 2px -1px #c8cad1' }}
       >
          {article.urlToImage && !imgLoadingError ? (
@@ -73,7 +73,7 @@ const Article = ({
                </p>
             </div>
          )}
-         <div className='flex h-[112px] w-full flex-col justify-between p-3'>
+         <div className='flex h-[92px] w-full flex-col justify-between p-3 lg:h-[112px]'>
             <div className='flex flex-col gap-1'>
                <p className='text-[10px] font-bold uppercase leading-4 text-blue500'>
                   {article.source.name}
@@ -99,7 +99,7 @@ const Article = ({
                   </button>
                </div>
             </div>
-            <p className='line-clamp-2 text-[12px] leading-none text-black600'>
+            <p className='line-clamp-2 hidden text-[12px] leading-none text-black600 lg:flex'>
                {article.author}
             </p>
          </div>
