@@ -61,6 +61,19 @@ const HomePage = () => {
    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
    useEffect(() => {
+      const handleScroll = () => {
+         if (
+            window.innerHeight + window.scrollY >=
+            document.body.offsetHeight
+         ) {
+            handleEndReached();
+         }
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+   }, [handleEndReached]);
+
+   useEffect(() => {
       if (newsGridRef.current && !isLoading) {
          newsGridRef.current.scrollTop = 0;
          newsGridRef.current.scrollTo({ top: 0, behavior: 'smooth' });
@@ -68,7 +81,7 @@ const HomePage = () => {
    }, [category, isLoading]);
 
    return (
-      <div className='h-[calc(100dvh-90px)] w-full'>
+      <div className='h-full w-full'>
          <nav className='news-gradient fixed left-0 top-0 z-30 flex h-[60px] w-full items-center justify-between px-[11dvw]'>
             <div className='flex flex-row items-center gap-10'>
                <p className='font-bold leading-[21px] text-white500'>
@@ -98,7 +111,9 @@ const HomePage = () => {
             </div>
             <div className='h-[1px] w-full flex-shrink-0 bg-divider/10'></div>
             <div className='flex h-full w-full flex-row gap-6 pb-2'>
-               <Sidebar category={category} setCategory={setCategory} />
+               <div className='sticky top-[90px] h-[calc(100vh-90px)]'>
+                  <Sidebar category={category} setCategory={setCategory} />
+               </div>
                <div className='flex w-full flex-col gap-2'>
                   <p className='text-lg font-bold leading-6 text-black600'>
                      News
@@ -123,17 +138,7 @@ const HomePage = () => {
                      </div>
                   ) : (
                      <div
-                        className='newsScrollbar flex h-[80dvh] flex-col gap-6 overflow-y-scroll'
-                        onScroll={(e) => {
-                           const target = e.target as HTMLElement;
-                           const scrollPosition =
-                              target.scrollTop + target.clientHeight;
-                           const scrollHeight = target.scrollHeight;
-
-                           if (scrollPosition >= scrollHeight) {
-                              handleEndReached();
-                           }
-                        }}
+                        className='flex h-full flex-col gap-6 pb-10'
                         ref={newsGridRef}
                      >
                         {category === '' && searchValue === '' ? (
