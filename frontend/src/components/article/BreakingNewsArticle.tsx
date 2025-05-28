@@ -10,7 +10,7 @@ const BreakingNewsArticle = ({ article }: IProps) => {
       <Link
          href={article.url}
          target='_blank'
-         className='flex h-[300px] w-full flex-col items-center justify-center rounded-lg bg-black600 hover:cursor-pointer'
+         className='flex h-[252px] w-full flex-col items-center justify-center rounded-lg bg-black600 hover:cursor-pointer'
          style={{ boxShadow: '0px 1px 2px -1px #c8cad1' }}
       >
          <div className='flex h-full w-[281px] flex-col items-center justify-center gap-2'>

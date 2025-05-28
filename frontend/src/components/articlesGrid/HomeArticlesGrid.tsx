@@ -75,7 +75,7 @@ const HomeArticlesGrid = ({
                className='grid h-full w-full gap-6'
                style={{
                   gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                  gridAutoRows: '300px',
+                  gridAutoRows: '252px',
                   placeItems: 'center',
                }}
             >

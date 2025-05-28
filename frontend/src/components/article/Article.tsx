@@ -53,11 +53,11 @@ const Article = ({
       <Link
          href={article.url}
          target='_blank'
-         className='flex h-[300px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer'
+         className='flex h-[252px] w-full flex-col rounded-lg bg-white500 hover:cursor-pointer'
          style={{ boxShadow: '0px 1px 2px -1px #c8cad1' }}
       >
          {article.urlToImage && !imgLoadingError ? (
-            <div className='relative left-0 top-0 h-[180px] w-full overflow-hidden rounded-tl-lg rounded-tr-lg'>
+            <div className='relative left-0 top-0 h-[140px] w-full overflow-hidden rounded-tl-lg rounded-tr-lg'>
                <Image
                   src={article.urlToImage}
                   alt={article.title}
@@ -67,13 +67,13 @@ const Article = ({
                />
             </div>
          ) : (
-            <div className='flex h-[180px] w-full items-center justify-center rounded-tl-lg rounded-tr-lg bg-gray-200'>
+            <div className='flex h-[140px] w-full items-center justify-center rounded-tl-lg rounded-tr-lg bg-gray-200'>
                <p className='text-[32px] font-black leading-[100%] text-red500'>
                   My<span className='text-black600'>News</span>
                </p>
             </div>
          )}
-         <div className='flex h-[110px] w-full flex-col justify-between p-3'>
+         <div className='flex h-[112px] w-full flex-col justify-between p-3'>
             <div className='flex flex-col gap-1'>
                <p className='text-[10px] font-bold uppercase leading-4 text-blue500'>
                   {article.source.name}
