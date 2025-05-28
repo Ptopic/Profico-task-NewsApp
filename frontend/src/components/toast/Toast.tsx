@@ -46,7 +46,7 @@ const Toast = ({
          </div>
          {!disabledClose ? (
             <button onClick={() => dismiss()} aria-label='Close notification'>
-               <CloseIcon className='size-6 text-white500' />
+               <CloseIcon className='size-4 text-white500' />
             </button>
          ) : null}
       </div>

@@ -18,28 +18,9 @@ const HomeArticlesGrid = ({
    isFetchingNextPage,
 }: IProps) => {
    return (
-      <div
-         className='grid h-full w-full gap-6'
-         style={{
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            placeItems: 'stretch',
-         }}
-      >
-         <div
-            className='h-full w-full flex-shrink-0'
-            style={{
-               gridColumn: 'span 2 / span 2',
-               gridRow: 'span 2 / span 2',
-            }}
-         >
-            <div
-               className='grid h-full w-full flex-shrink-0 gap-6'
-               style={{
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gridTemplateRows: 'repeat(2, 1fr)',
-                  placeItems: 'center',
-               }}
-            >
+      <div className='grid h-full w-full grid-cols-1 place-items-stretch gap-4 lg:grid-cols-3 lg:gap-6'>
+         <div className='h-full w-full flex-shrink-0 lg:col-span-2 lg:row-span-2'>
+            <div className='grid h-full w-full flex-shrink-0 grid-cols-1 place-items-center gap-4 lg:grid-cols-2 lg:grid-rows-2 lg:gap-6'>
                {articles.slice(0, 3).map((article: IArticle) => (
                   <Article
                      key={article.url}
@@ -53,32 +34,13 @@ const HomeArticlesGrid = ({
                ))}
             </div>
          </div>
-         <div
-            className='h-full w-full'
-            style={{
-               gridRow: 'span 2 / span 2',
-               gridColumnStart: 3,
-            }}
-         >
-            <div className='grid h-full w-full gap-6'>
+         <div className='hidden h-full w-full lg:col-start-3 lg:row-span-2 lg:flex'>
+            <div className='h-full w-full'>
                <LatestNews />
             </div>
          </div>
-         <div
-            className='h-full w-full'
-            style={{
-               gridColumn: 'span 3 / span 3',
-               gridRowStart: 3,
-            }}
-         >
-            <div
-               className='grid h-full w-full gap-6'
-               style={{
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                  gridAutoRows: '252px',
-                  placeItems: 'center',
-               }}
-            >
+         <div className='h-full w-full lg:col-span-3 lg:row-start-3'>
+            <div className='grid h-full w-full place-items-center gap-4 lg:gap-6 lg:[grid-auto-rows:252px] lg:[grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]'>
                {articles.slice(4).map((article: IArticle) => (
                   <Article
                      key={article.url}

@@ -1,8 +1,9 @@
 'use client';
 
+import useDebounce from '@shared/hooks/useDebounce';
 import { CloseIcon, SearchIcon } from '@shared/svgs';
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface IProps {
@@ -14,7 +15,7 @@ interface IProps {
    setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 
-const Search = ({
+const MobileSearch = ({
    placeholder = 'Search',
    className,
    containerClassname,
@@ -24,9 +25,11 @@ const Search = ({
 }: IProps) => {
    const router = useRouter();
 
-   const handleSearch = () => {
-      router.push(`?search=${encodeURIComponent(searchTerm)}`);
-   };
+   const debouncedSearchValue = useDebounce(searchTerm, 600);
+
+   useEffect(() => {
+      router.push(`?search=${encodeURIComponent(debouncedSearchValue)}`);
+   }, [debouncedSearchValue]);
 
    const clearSearch = () => {
       setSearchTerm('');
@@ -37,7 +40,7 @@ const Search = ({
       <div
          data-testid='search'
          className={twMerge(
-            'flex h-[50px] w-[725px] flex-row items-center gap-1 rounded-[10px] bg-white500 p-1 transition-colors duration-200 ease-linear',
+            'flex h-[50px] w-full flex-row items-center rounded-[10px] bg-white500 p-1 transition-colors duration-200 ease-linear lg:hidden',
             containerClassname,
             disabled && 'pointer-events-none'
          )}
@@ -60,25 +63,14 @@ const Search = ({
          />
          {searchTerm && (
             <button
-               className='mr-1 flex size-[16px] items-center justify-center'
+               className='mr-2 flex size-[16px] items-center justify-center'
                onClick={() => clearSearch()}
             >
                <CloseIcon className='size-[26px] text-black600' />
             </button>
          )}
-         <div className='w-fit'>
-            <button
-               className='h-[40px] w-[95px] rounded-md bg-red500 text-[15px] font-bold uppercase leading-5 text-white500'
-               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  handleSearch();
-               }}
-            >
-               Search
-            </button>
-         </div>
       </div>
    );
 };
 
-export default Search;
+export default MobileSearch;

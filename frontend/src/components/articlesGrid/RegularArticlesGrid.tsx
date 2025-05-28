@@ -19,14 +19,7 @@ const RegularArticlesGrid = ({
    isFetchingNextPage,
 }: IProps) => {
    return (
-      <div
-         className='grid h-full w-full gap-6'
-         style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gridAutoRows: '252px',
-            placeItems: 'center',
-         }}
-      >
+      <div className='grid h-full w-full grid-cols-1 place-items-center gap-6 lg:[grid-auto-rows:252px] lg:[grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]'>
          {category === 'favourites'
             ? favouriteArticles.map((article: IArticle) => (
                  <Article

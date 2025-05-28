@@ -83,7 +83,7 @@ const Article = ({
                      {article.title}
                   </p>
                   <button
-                     className='justify-cente z-50 flex size-[24px] flex-shrink-0 items-center hover:cursor-pointer'
+                     className='justify-cente z-30 flex size-[24px] flex-shrink-0 items-center hover:cursor-pointer'
                      onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
@@ -99,7 +99,7 @@ const Article = ({
                   </button>
                </div>
             </div>
-            <p className='text-[12px] leading-none text-black600'>
+            <p className='line-clamp-2 text-[12px] leading-none text-black600'>
                {article.author}
             </p>
          </div>

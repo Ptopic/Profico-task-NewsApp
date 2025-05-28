@@ -15,6 +15,7 @@ const useGetTopHeadlinesNews = (
       hasNextPage,
       fetchNextPage,
       error,
+      refetch,
    } = useInfiniteQuery({
       queryKey: [NEWS_TOP_HEADLINES, search, category, pageSize],
       queryFn: async ({ pageParam = DEFAULT_PAGE }) => {
@@ -55,6 +56,7 @@ const useGetTopHeadlinesNews = (
       hasNextPage,
       fetchNextPage,
       error,
+      refetch,
    };
 };
 

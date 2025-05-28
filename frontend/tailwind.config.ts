@@ -18,6 +18,7 @@ const config: Config = {
             black600: '#1D1D1B',
             blue500: '#1E71BB',
             gray500: '#7B7A7C',
+            gray600: '#8D8D8C',
             divider: '#979797',
             green500: '#0F856C',
          },
