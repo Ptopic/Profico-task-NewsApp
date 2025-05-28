@@ -1,14 +1,14 @@
 import useGetLatestNews from '@api/news/hooks/useGetLatestNews';
 import LoadingWrapper from '@components/loadingWrapper';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
+import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
+import { toastError } from '@shared/utils/toast';
 import { useCallback, useEffect, useRef } from 'react';
 import LatestNewsDivider from './LatestNewsDivider';
 import LatestNewsItem from './LatestNewsItem';
-import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
-import { toastError } from '@shared/utils/toast';
 
 const LatestNews = () => {
-   const LATEST_NEWS_PAGE_SIZE = 40;
+   const LATEST_NEWS_PAGE_SIZE = 20;
 
    const {
       articles,
@@ -20,10 +20,11 @@ const LatestNews = () => {
    } = useGetLatestNews(LATEST_NEWS_PAGE_SIZE);
 
    const handleEndReached = useCallback(() => {
-      if (hasNextPage && !isFetchingNextPage) {
+      // Error is here because news api has limit of 100 articles on developer account so we cant fetch articles from 100 and more
+      if (hasNextPage && !isFetchingNextPage && !error) {
          fetchNextPage();
       }
-   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+   }, [hasNextPage, isFetchingNextPage, fetchNextPage, error]);
 
    useEffect(() => {
       if (error) {
@@ -69,10 +70,10 @@ const LatestNews = () => {
                   }}
                   ref={latestNewsGridRef}
                >
-                  {articles.map((article) => (
+                  {articles.map((article, idx) => (
                      <div className='flex flex-col gap-2' key={article.url}>
                         <LatestNewsItem article={article} />
-                        <LatestNewsDivider />
+                        {idx !== articles.length - 1 && <LatestNewsDivider />}
                      </div>
                   ))}
                   {isFetchingNextPage && (
