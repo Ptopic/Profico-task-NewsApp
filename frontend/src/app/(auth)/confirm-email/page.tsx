@@ -2,6 +2,7 @@ import ConfirmEmailPage from '@features/confirm-email';
 import { getMetadataTitle } from '@shared/utils';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
+import { Suspense } from 'react';
 
 export async function generateMetadata(
    {},
@@ -20,7 +21,11 @@ export async function generateMetadata(
 }
 
 const ConfirmEmail = () => {
-   return <ConfirmEmailPage />;
+   return (
+      <Suspense>
+         <ConfirmEmailPage />
+      </Suspense>
+   );
 };
 
 export default ConfirmEmail;

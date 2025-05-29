@@ -2,6 +2,7 @@ import ResetPasswordPage from '@features/reset-password';
 import { getMetadataTitle } from '@shared/utils';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
+import { Suspense } from 'react';
 
 export async function generateMetadata(
    {},
@@ -20,7 +21,11 @@ export async function generateMetadata(
 }
 
 const ResetPassword = () => {
-   return <ResetPasswordPage />;
+   return (
+      <Suspense>
+         <ResetPasswordPage />
+      </Suspense>
+   );
 };
 
 export default ResetPassword;

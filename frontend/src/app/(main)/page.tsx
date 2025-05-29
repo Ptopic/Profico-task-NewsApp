@@ -7,6 +7,7 @@ import { getMetadataTitle } from '@shared/utils';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
+import { Suspense } from 'react';
 
 export async function generateMetadata(
    {},
@@ -41,7 +42,9 @@ const Home = async () => {
    const dehydratedState = dehydrate(queryClient);
    return (
       <HydrationBoundary state={dehydratedState}>
-         <HomePage />
+         <Suspense>
+            <HomePage />
+         </Suspense>
       </HydrationBoundary>
    );
 };

@@ -2,6 +2,7 @@ import LoginPage from '@features/login';
 import { getMetadataTitle } from '@shared/utils';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
+import { Suspense } from 'react';
 
 export async function generateMetadata(
    {},
@@ -20,7 +21,11 @@ export async function generateMetadata(
 }
 
 const Login = () => {
-   return <LoginPage />;
+   return (
+      <Suspense>
+         <LoginPage />
+      </Suspense>
+   );
 };
 
 export default Login;
