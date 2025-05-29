@@ -19,7 +19,7 @@ const getTopHeadlinesNews =
          page,
          pageSize,
          category: category || 'general',
-         ...(search && { q: search }),
+         ...(search && { search: search }),
       };
       const url = queryString.stringifyUrl({
          url: `${config.apiUrl}/news/top-headlines`,
