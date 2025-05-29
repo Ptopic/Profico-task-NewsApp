@@ -25,9 +25,6 @@ export class UsersController {
 		@Query('pageSize') pageSize: string,
 		@Query('searchQuery') searchQuery?: string
 	) {
-		console.log('page', page);
-		console.log('pageSize', pageSize);
-		console.log('searchQuery', searchQuery);
 		const { favourites, totalFavourites } =
 			await this.usersService.getFavourites(
 				req.user.id,

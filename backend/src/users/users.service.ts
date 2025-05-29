@@ -44,7 +44,6 @@ export class UsersService {
 	}
 
 	async removeFavourite(userId: number, articleUrl: string) {
-		console.log(userId, articleUrl);
 		return this.prisma.favouriteArticle.deleteMany({
 			where: { url: articleUrl, userId },
 		});

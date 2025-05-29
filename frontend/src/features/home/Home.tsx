@@ -15,6 +15,7 @@ import Sidebar from '@components/sidebar';
 import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
 import usePaginationParams from '@shared/hooks/usePaginationParams';
 import { toastError } from '@shared/utils/toast';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -135,7 +136,7 @@ const HomePage = () => {
                   Make MyNews your homepage
                </p>
                <p className='text-sm font-light leading-[21px] text-white500'>
-                  Every day discover what’s trending on the internet!
+                  Every day discover what's trending on the internet!
                </p>
             </div>
             <div className='flex flex-row items-center gap-6'>
@@ -162,27 +163,80 @@ const HomePage = () => {
                   setSearchTerm={setMobileSearchTerm}
                />
             </div>
-            <div className='flex flex-row items-center gap-4 lg:hidden'>
-               <button
+            <div className='flex flex-row items-center gap-2 lg:hidden'>
+               <motion.button
+                  initial={false}
+                  animate={{
+                     backgroundColor:
+                        selectedTab === 'Featured'
+                           ? 'rgba(239, 68, 68, 0.1)'
+                           : 'transparent',
+                     color:
+                        selectedTab === 'Featured'
+                           ? 'rgb(187, 30, 30)'
+                           : 'rgb(51, 51, 51)',
+                     fontWeight: selectedTab === 'Featured' ? 600 : 400,
+                  }}
+                  transition={{
+                     duration: 0.2,
+                     ease: 'easeInOut',
+                  }}
                   className={twMerge(
-                     'leading-5 text-black600',
-                     selectedTab === 'Featured' &&
-                        'rounded-full bg-red500/10 px-4 py-2 font-semibold text-red500'
+                     'relative rounded-full px-4 py-2 leading-5',
+                     'transition-colors hover:bg-red500/5'
                   )}
                   onClick={() => setSelectedTab('Featured')}
                >
                   Featured
-               </button>
-               <button
+                  {selectedTab === 'Featured' && (
+                     <motion.div
+                        layoutId='activeTab'
+                        className='absolute inset-0 rounded-full bg-red500/10'
+                        transition={{
+                           type: 'spring',
+                           bounce: 0.2,
+                           duration: 0.6,
+                        }}
+                     />
+                  )}
+               </motion.button>
+
+               <motion.button
+                  initial={false}
+                  animate={{
+                     backgroundColor:
+                        selectedTab === 'Latest'
+                           ? 'rgba(239, 68, 68, 0.1)'
+                           : 'transparent',
+                     color:
+                        selectedTab === 'Latest'
+                           ? 'rgb(187, 30, 30)'
+                           : 'rgb(51, 51, 51)',
+                     fontWeight: selectedTab === 'Latest' ? 600 : 400,
+                  }}
+                  transition={{
+                     duration: 0.2,
+                     ease: 'easeInOut',
+                  }}
                   className={twMerge(
-                     'leading-5 text-black600',
-                     selectedTab === 'Latest' &&
-                        'rounded-full bg-red500/10 px-4 py-2 font-semibold text-red500'
+                     'relative rounded-full px-4 py-2 leading-5',
+                     'transition-colors hover:bg-red500/5'
                   )}
                   onClick={() => setSelectedTab('Latest')}
                >
                   Latest
-               </button>
+                  {selectedTab === 'Latest' && (
+                     <motion.div
+                        layoutId='activeTab'
+                        className='absolute inset-0 rounded-full bg-red500/10'
+                        transition={{
+                           type: 'spring',
+                           bounce: 0.2,
+                           duration: 0.6,
+                        }}
+                     />
+                  )}
+               </motion.button>
             </div>
             <div className='hidden w-full flex-row items-center justify-between lg:flex'>
                <p className='text-[32px] font-black leading-[100%] text-red500'>
