@@ -18,12 +18,11 @@ const getTopHeadlinesNews =
          sortBy: 'publishedAt',
          page,
          pageSize,
-         apiKey: config.newsApiKey,
          category: category || 'general',
          ...(search && { q: search }),
       };
       const url = queryString.stringifyUrl({
-         url: `https://newsapi.org/v2/top-headlines`,
+         url: `${config.apiUrl}/news/top-headlines`,
          query: params,
       });
 
@@ -44,13 +43,12 @@ const getLatestNews =
          sortBy: 'publishedAt',
          page,
          pageSize,
-         apiKey: config.newsApiKey,
          from: yesterdayDate,
          to: yesterdayDate,
          sources: 'abc-news,buzzfeed,cbc-news,google-news',
       };
       const url = queryString.stringifyUrl({
-         url: `https://newsapi.org/v2/everything`,
+         url: `${config.apiUrl}/news/latest`,
          query: params,
       });
 
