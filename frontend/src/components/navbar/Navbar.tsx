@@ -1,7 +1,10 @@
 import MobileSearch from '@components/search/MobileSearch';
 import { SidebarItems } from '@components/sidebar/constants';
-import { CloseIcon, HamburgerIcon } from '@shared/svgs';
+import { CloseIcon, HamburgerIcon, LogoutIcon } from '@shared/svgs';
+import { removeAuthTokens } from '@shared/utils';
+import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 import NavbarItem from './NavbarItem';
 
 interface IProps {
@@ -19,6 +22,7 @@ const Navbar = ({
    setSearchTerm,
    setSelectedTab,
 }: IProps) => {
+   const router = useRouter();
    const [isOpen, setIsOpen] = useState(false);
 
    useEffect(() => {
@@ -28,6 +32,11 @@ const Navbar = ({
          document.body.style.overflow = 'auto';
       }
    }, [isOpen]);
+
+   const handleLogout = async () => {
+      await removeAuthTokens();
+      router.push('/login');
+   };
 
    return (
       <div className='fixed left-0 right-0 top-0 z-50 h-fit w-[100dvh-32px] bg-white600 p-4 lg:hidden'>
@@ -76,6 +85,26 @@ const Navbar = ({
                            setIsOpen={setIsOpen}
                         />
                      ))}
+                     <button
+                        className={twMerge(
+                           'flex h-[95px] w-[95px] flex-col items-center justify-center gap-2 rounded-[5px] bg-white500 hover:cursor-pointer'
+                        )}
+                        style={{
+                           boxShadow: '0px 6px 36px 0px rgba(0, 0, 0, 0.16)',
+                        }}
+                        onClick={handleLogout}
+                     >
+                        <div className={twMerge('size-6 text-gray600')}>
+                           <LogoutIcon />
+                        </div>
+                        <p
+                           className={twMerge(
+                              'text-center text-sm leading-5 text-gray600'
+                           )}
+                        >
+                           Log out
+                        </p>
+                     </button>
                   </div>
                </div>
             </div>

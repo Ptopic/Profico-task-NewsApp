@@ -26,6 +26,23 @@ model User {
   
   resetPasswordRequests ResetPasswordRequest[]
   emailConfirmationRequests EmailConfirmationRequest[]
+  favouriteArticles FavouriteArticle[]
+}
+
+model FavouriteArticle {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author String?
+  title String?
+  url String
+  urlToImage String?
+  publishedAt String?
+  publisher String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
 }
 
 model ResetPasswordRequest {
@@ -39,9 +56,6 @@ model ResetPasswordRequest {
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  
-  @@index([token])
-  @@index([expiresAt])
 }
 
 model EmailConfirmationRequest {
@@ -54,9 +68,6 @@ model EmailConfirmationRequest {
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  
-  @@index([token])
-  @@index([expiresAt])
 }
 
 // model UserScratchedCard {

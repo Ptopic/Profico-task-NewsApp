@@ -1,6 +1,6 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
-import { withClientRequest } from '@api/requestBuilder/client/withClientRequest';
-import { withServerRequest } from '@api/requestBuilder/server/withServerRequest';
+import { withAuthenticatedClientRequest } from '@api/requestBuilder/client/withClientRequest';
+import { withAuthenticatedServerRequest } from '@api/requestBuilder/server/withServerRequest';
 import { ICallableRequestBuilder } from '@api/requestBuilder/types';
 import { config } from '@shared/config/config';
 import queryString from 'query-string';
@@ -59,13 +59,11 @@ const getLatestNews =
 
 export const newsApi = {
    client: {
-      // TODO: Change to withAuthenticatedClientRequest
-      getTopHeadlinesNews: withClientRequest(getTopHeadlinesNews),
-      getLatestNews: withClientRequest(getLatestNews),
+      getTopHeadlinesNews: withAuthenticatedClientRequest(getTopHeadlinesNews),
+      getLatestNews: withAuthenticatedClientRequest(getLatestNews),
    },
    server: {
-      // TODO: Change to withAuthenticatedServerRequest
-      getTopHeadlinesNews: withServerRequest(getTopHeadlinesNews),
-      getLatestNews: withServerRequest(getLatestNews),
+      getTopHeadlinesNews: withAuthenticatedServerRequest(getTopHeadlinesNews),
+      getLatestNews: withAuthenticatedServerRequest(getLatestNews),
    },
 };

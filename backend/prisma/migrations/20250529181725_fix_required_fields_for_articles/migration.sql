@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "FavouriteArticle" ALTER COLUMN "author" DROP NOT NULL,
+ALTER COLUMN "title" DROP NOT NULL,
+ALTER COLUMN "urlToImage" DROP NOT NULL,
+ALTER COLUMN "publishedAt" DROP NOT NULL,
+ALTER COLUMN "publisher" DROP NOT NULL;

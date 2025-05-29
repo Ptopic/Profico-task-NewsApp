@@ -1,7 +1,7 @@
 'use client';
 
 import useGetTopHeadlinesNews from '@api/news/hooks/useGetTopHeadlinesNews';
-import { IArticle } from '@api/news/types';
+import useGetFavourites from '@api/user/hooks/useGetFavourites';
 import {
    HomeArticlesGrid,
    RegularArticlesGrid,
@@ -37,28 +37,15 @@ const HomePage = () => {
 
    const [selectedTab, setSelectedTab] = useState<string>('Featured');
 
-   const [favouriteArticles, setFavouriteArticles] = useState<IArticle[]>([]);
-
-   useEffect(() => {
-      const favouritesFromLocalStorage = localStorage.getItem('favourites');
-      setFavouriteArticles(
-         favouritesFromLocalStorage
-            ? JSON.parse(favouritesFromLocalStorage)
-            : []
-      );
-   }, []);
-
-   const filteredAndSortedFavourites = favouriteArticles
-      .filter(
-         (article: IArticle) =>
-            !searchValue ||
-            article.title.toLowerCase().includes(searchValue.toLowerCase())
-      )
-      .sort(
-         (a: IArticle, b: IArticle) =>
-            new Date(b.dateAddedToFavourites).getTime() -
-            new Date(a.dateAddedToFavourites).getTime()
-      );
+   const {
+      favourites,
+      isLoading: isLoadingFavourites,
+      isFetchingNextPage: isFetchingNextPageFavourites,
+      hasNextPage: hasNextPageFavourites,
+      fetchNextPage: fetchNextPageFavourites,
+      error: errorFavourites,
+      refetch: refetchFavourites,
+   } = useGetFavourites(searchValue, NEWS_PAGE_SIZE);
 
    const {
       articles,
@@ -71,10 +58,24 @@ const HomePage = () => {
    } = useGetTopHeadlinesNews(searchValue, category, NEWS_PAGE_SIZE);
 
    const handleEndReached = useCallback(() => {
-      if (hasNextPage && !isFetchingNextPage) {
-         fetchNextPage();
+      if (category === 'favourites') {
+         if (hasNextPageFavourites && !isFetchingNextPageFavourites) {
+            fetchNextPageFavourites();
+         }
+      } else {
+         if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+         }
       }
-   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+   }, [
+      category,
+      hasNextPage,
+      isFetchingNextPage,
+      fetchNextPage,
+      hasNextPageFavourites,
+      isFetchingNextPageFavourites,
+      fetchNextPageFavourites,
+   ]);
 
    useEffect(() => {
       const handleScroll = () => {
@@ -94,13 +95,13 @@ const HomePage = () => {
    }, [category]);
 
    useEffect(() => {
-      if (error) {
+      if (error || errorFavourites) {
          toastError({
             title: DEFAULT_ERROR_MESSAGE,
-            description: error.message,
+            description: error?.message || errorFavourites?.message,
          });
       }
-   }, [error]);
+   }, [error, errorFavourites]);
 
    useEffect(() => {
       let resizeTimeout: NodeJS.Timeout | null = null;
@@ -115,6 +116,7 @@ const HomePage = () => {
             );
             window.innerWidth > 1150 && setSelectedTab('Featured');
             refetch();
+            refetchFavourites();
          }, 400);
       };
 
@@ -123,7 +125,7 @@ const HomePage = () => {
          window.removeEventListener('resize', handleRefetch);
          if (resizeTimeout) clearTimeout(resizeTimeout);
       };
-   }, [refetch, mobileSearchTerm, searchTerm]);
+   }, [refetch, refetchFavourites, mobileSearchTerm, searchTerm]);
 
    return (
       <div className='h-full w-full'>
@@ -206,6 +208,7 @@ const HomePage = () => {
 
                   {selectedTab === 'Featured' ? (
                      !isLoading &&
+                     !isLoadingFavourites &&
                      articles.length === 0 &&
                      category !== 'favourites' ? (
                         <div className='flex h-[50%] w-full items-center justify-center'>
@@ -214,7 +217,8 @@ const HomePage = () => {
                            </p>
                         </div>
                      ) : !isLoading &&
-                       favouriteArticles.length === 0 &&
+                       !isLoadingFavourites &&
+                       favourites.length === 0 &&
                        category === 'favourites' ? (
                         <div className='flex h-[50%] w-full items-center justify-center'>
                            <p className='text-[28px] font-black leading-[21px] text-black500'>
@@ -223,26 +227,28 @@ const HomePage = () => {
                         </div>
                      ) : (
                         <LoadingWrapper
-                           isLoading={isLoading}
+                           isLoading={isLoading || isLoadingFavourites}
                            className='h-[70dvh]'
                         >
                            <div className='flex h-full flex-col gap-6 pb-10'>
                               {category === '' && searchValue === '' ? (
                                  <HomeArticlesGrid
                                     articles={articles}
-                                    favouriteArticles={favouriteArticles}
-                                    setFavouriteArticles={setFavouriteArticles}
-                                    isFetchingNextPage={isFetchingNextPage}
+                                    favouriteArticles={favourites}
+                                    isFetchingNextPage={
+                                       isFetchingNextPage ||
+                                       isFetchingNextPageFavourites
+                                    }
                                  />
                               ) : (
                                  <RegularArticlesGrid
                                     category={category}
                                     articles={articles}
-                                    favouriteArticles={
-                                       filteredAndSortedFavourites
+                                    favouriteArticles={favourites}
+                                    isFetchingNextPage={
+                                       isFetchingNextPage ||
+                                       isFetchingNextPageFavourites
                                     }
-                                    setFavouriteArticles={setFavouriteArticles}
-                                    isFetchingNextPage={isFetchingNextPage}
                                  />
                               )}
                            </div>

@@ -18,7 +18,7 @@ const NavbarItem = ({
    setIsOpen,
 }: IProps) => {
    return (
-      <div
+      <button
          className={twMerge(
             'flex h-[95px] w-[95px] flex-col items-center justify-center gap-2 rounded-[5px] hover:cursor-pointer',
             isActive && 'bg-white500'
@@ -36,7 +36,7 @@ const NavbarItem = ({
       >
          <div
             className={twMerge(
-               'text-gray600 size-6',
+               'size-6 text-gray600',
                isActive && 'text-red500'
             )}
          >
@@ -44,13 +44,13 @@ const NavbarItem = ({
          </div>
          <p
             className={twMerge(
-               'text-gray600 text-center text-sm leading-5',
+               'text-center text-sm leading-5 text-gray600',
                isActive && 'text-red500'
             )}
          >
             {item.name}
          </p>
-      </div>
+      </button>
    );
 };
 

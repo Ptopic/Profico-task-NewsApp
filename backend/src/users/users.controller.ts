@@ -1,63 +1,56 @@
-// import {
-// 	Body,
-// 	Controller,
-// 	Delete,
-// 	Get,
-// 	NotFoundException,
-// 	Param,
-// 	ParseIntPipe,
-// 	Patch,
-// 	Post,
-// } from '@nestjs/common';
-// import { CreateUserDto } from './dtos/createUser.dto';
-// import { UpdateUserDto } from './dtos/updateUser.dto';
-// import { UpdateUserSettingsDto } from './dtos/updateUserSettings.dto';
-// import { UsersService } from './users.service';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Post,
+	Query,
+	Req,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { JwtAuth } from 'src/auth/decorators/jwt-auth.decorator';
+import { AddArticleToFavouritesDto } from './dtos/addArticleToFavourites.dto';
+import { RemoveArticleFromFavouritesDto } from './dtos/removeArticleFromFavourites.dto';
+import { UsersService } from './users.service';
 
-// @Controller('users')
-// export class UsersController {
-// 	constructor(private usersService: UsersService) {}
+@Controller('users')
+export class UsersController {
+	constructor(private usersService: UsersService) {}
 
-// 	@Post()
-// 	createUser(@Body() createUserDto: CreateUserDto) {
-// 		return this.usersService.createUser(createUserDto);
-// 	}
+	@Get('favourites')
+	@JwtAuth()
+	async getFavourites(
+		@Req() req: Request,
+		@Query('page') page: string,
+		@Query('pageSize') pageSize: string,
+		@Query('searchQuery') searchQuery?: string
+	) {
+		console.log('page', page);
+		console.log('pageSize', pageSize);
+		console.log('searchQuery', searchQuery);
+		const { favourites, totalFavourites } =
+			await this.usersService.getFavourites(
+				req.user.id,
+				page,
+				pageSize,
+				searchQuery
+			);
 
-// 	@Get()
-// 	getUsers() {
-// 		return this.usersService.getUsers();
-// 	}
+		return { data: favourites, totalCount: totalFavourites };
+	}
 
-// 	@Get(':id')
-// 	async getUserById(@Param('id', ParseIntPipe) id: number) {
-// 		const user = await this.usersService.getUserById(id);
+	@Post('favourites')
+	@JwtAuth()
+	addFavourite(@Req() req: Request, @Body() data: AddArticleToFavouritesDto) {
+		return this.usersService.addFavourite(req.user.id, data);
+	}
 
-// 		if (!user) throw new NotFoundException('User not found');
-
-// 		return user;
-// 	}
-
-// 	@Patch(':id')
-// 	async updateUserById(
-// 		@Param('id', ParseIntPipe) id: number,
-// 		@Body() updateUserDto: UpdateUserDto
-// 	) {
-// 		return this.usersService.updateUserById(id, updateUserDto);
-// 	}
-
-// 	@Delete(':id')
-// 	async deleteUserById(@Param('id', ParseIntPipe) id: number) {
-// 		return this.usersService.deleteUserById(id);
-// 	}
-
-// 	@Patch(':id/settings')
-// 	updateUserSettingsByUserId(
-// 		@Param('id', ParseIntPipe) id: number,
-// 		@Body() updateUserSettingsDto: UpdateUserSettingsDto
-// 	) {
-// 		return this.usersService.updateUserSettingsByUserId(
-// 			id,
-// 			updateUserSettingsDto
-// 		);
-// 	}
-// }
+	@Delete('favourites')
+	@JwtAuth()
+	removeFavourite(
+		@Req() req: Request,
+		@Body() data: RemoveArticleFromFavouritesDto
+	) {
+		return this.usersService.removeFavourite(req.user.id, data.url);
+	}
+}

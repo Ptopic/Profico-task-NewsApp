@@ -1,20 +1,18 @@
 import { IArticle } from '@api/news/types';
+import { IFavouriteArticle } from '@api/user/types';
 import { Article, BreakingNewsArticle } from '@components/article';
 import LatestNews from '@components/latestNews';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
-import { Dispatch, SetStateAction } from 'react';
 
 interface IProps {
    articles: IArticle[];
-   favouriteArticles: IArticle[];
-   setFavouriteArticles: Dispatch<SetStateAction<IArticle[]>>;
+   favouriteArticles: IFavouriteArticle[];
    isFetchingNextPage: boolean;
 }
 
 const HomeArticlesGrid = ({
    articles,
    favouriteArticles,
-   setFavouriteArticles,
    isFetchingNextPage,
 }: IProps) => {
    return (
@@ -26,7 +24,6 @@ const HomeArticlesGrid = ({
                      key={article.url}
                      article={article}
                      favouriteArticles={favouriteArticles}
-                     setFavouriteArticles={setFavouriteArticles}
                   />
                ))}
                {articles.slice(3, 4).map((article: IArticle) => (
@@ -46,7 +43,6 @@ const HomeArticlesGrid = ({
                      key={article.url}
                      article={article}
                      favouriteArticles={favouriteArticles}
-                     setFavouriteArticles={setFavouriteArticles}
                   />
                ))}
             </div>

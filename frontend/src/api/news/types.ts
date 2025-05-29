@@ -4,6 +4,7 @@ export interface IArticleResponse {
 }
 
 export interface IArticle {
+   id: number;
    author: string;
    title: string;
    url: string;
@@ -13,4 +14,5 @@ export interface IArticle {
    source: {
       name: string;
    };
+   publisher?: string;
 }

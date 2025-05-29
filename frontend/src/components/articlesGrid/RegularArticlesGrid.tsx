@@ -1,13 +1,12 @@
 import { IArticle } from '@api/news/types';
+import { IFavouriteArticle } from '@api/user/types';
 import Article from '@components/article/Article';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
-import { Dispatch, SetStateAction } from 'react';
 
 interface IProps {
    category: string;
    articles: IArticle[];
-   favouriteArticles: IArticle[];
-   setFavouriteArticles: Dispatch<SetStateAction<IArticle[]>>;
+   favouriteArticles: IFavouriteArticle[];
    isFetchingNextPage: boolean;
 }
 
@@ -15,18 +14,16 @@ const RegularArticlesGrid = ({
    category,
    articles,
    favouriteArticles,
-   setFavouriteArticles,
    isFetchingNextPage,
 }: IProps) => {
    return (
       <div className='grid h-full w-full grid-cols-1 place-items-center gap-6 lg:[grid-auto-rows:252px] lg:[grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]'>
          {category === 'favourites'
-            ? favouriteArticles.map((article: IArticle) => (
+            ? favouriteArticles.map((article: IFavouriteArticle) => (
                  <Article
                     key={article.url}
-                    article={article}
+                    article={article as unknown as IArticle}
                     favouriteArticles={favouriteArticles}
-                    setFavouriteArticles={setFavouriteArticles}
                  />
               ))
             : articles.map((article: IArticle) => (
@@ -34,7 +31,6 @@ const RegularArticlesGrid = ({
                     key={article.url}
                     article={article}
                     favouriteArticles={favouriteArticles}
-                    setFavouriteArticles={setFavouriteArticles}
                  />
               ))}
          {isFetchingNextPage && (

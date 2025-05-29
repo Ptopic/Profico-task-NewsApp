@@ -1,21 +1,23 @@
 import { IArticle } from '@api/news/types';
+import useAddToFavourites from '@api/user/hooks/useAddToFavourites';
+import useRemoveFromFavourites from '@api/user/hooks/useRemoveFromFavourites';
+import { IFavouriteArticle } from '@api/user/types';
+import { FAVOURITES } from '@shared/queryKeys';
 import { FavouritesIcon } from '@shared/svgs';
+import { toastError, toastSuccess } from '@shared/utils/toast';
+import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface IProps {
    article: IArticle;
-   favouriteArticles: IArticle[];
-   setFavouriteArticles: Dispatch<SetStateAction<IArticle[]>>;
+   favouriteArticles: IFavouriteArticle[];
 }
 
-const Article = ({
-   article,
-   favouriteArticles,
-   setFavouriteArticles,
-}: IProps) => {
+const Article = ({ article, favouriteArticles }: IProps) => {
+   const queryClient = useQueryClient();
    const [imgLoadingError, setImgLoadingError] = useState(false);
 
    const isFavourite = (url: string): boolean => {
@@ -28,25 +30,49 @@ const Article = ({
       );
    };
 
+   const { mutate: addToFavourites } = useAddToFavourites({
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: [FAVOURITES] });
+         toastSuccess({
+            title: 'Article added to favourites',
+         });
+      },
+      onError: (error) => {
+         toastError({
+            title: 'Error adding article to favourites',
+            description: error.message,
+         });
+      },
+   });
+
+   const { mutate: removeFromFavourites } = useRemoveFromFavourites({
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: [FAVOURITES] });
+         toastSuccess({
+            title: 'Article removed from favourites',
+         });
+      },
+      onError: (error) => {
+         toastError({
+            title: 'Error removing article from favourites',
+            description: error.message,
+         });
+      },
+   });
+
    const toggleBookmark = (article: IArticle): void => {
-      const dateAddedToFavourites = new Date();
-
-      article.dateAddedToFavourites = dateAddedToFavourites;
-
-      const stored = localStorage.getItem('favourites');
-
-      let favourites: IArticle[] = stored ? JSON.parse(stored) : [];
-
       if (isFavourite(article.url)) {
-         favourites = favourites.filter(
-            (articleToRemove) => article.url !== articleToRemove.url
-         );
+         removeFromFavourites({ url: article.url });
       } else {
-         favourites = [article, ...favourites];
+         addToFavourites({
+            publisher: article.source?.name || article.publisher || '',
+            author: article.author,
+            title: article.title,
+            url: article.url,
+            urlToImage: article.urlToImage,
+            publishedAt: article.publishedAt,
+         });
       }
-
-      localStorage.setItem('favourites', JSON.stringify(favourites));
-      setFavouriteArticles(favourites);
    };
 
    return (
@@ -76,7 +102,7 @@ const Article = ({
          <div className='flex h-[92px] w-full flex-col justify-between p-3 lg:h-[112px]'>
             <div className='flex flex-col gap-1'>
                <p className='text-[10px] font-bold uppercase leading-4 text-blue500'>
-                  {article.source.name}
+                  {article.source?.name || article.publisher}
                </p>
                <div className='flex flex-row items-start justify-between gap-2'>
                   <p className='line-clamp-2 font-medium leading-5 text-black500'>
