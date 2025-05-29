@@ -1,5 +1,6 @@
 import { LogoutIcon } from '@shared/svgs';
-import router from 'next/router';
+import { removeAuthTokens } from '@shared/utils';
+import { useRouter } from 'next/navigation';
 import { SidebarItems } from './constants';
 import SidebarItem from './SidebarItem';
 
@@ -9,8 +10,10 @@ interface IProps {
 }
 
 const Sidebar = ({ category, setCategory }: IProps) => {
-   const handleLogout = () => {
-      localStorage.removeItem('token');
+   const router = useRouter();
+
+   const handleLogout = async () => {
+      await removeAuthTokens();
       router.push('/login');
    };
 
@@ -24,14 +27,17 @@ const Sidebar = ({ category, setCategory }: IProps) => {
                setCategory={setCategory}
             />
          ))}
-         <div className='flex size-[63px] flex-col items-center justify-center gap-1 rounded-[5px] bg-white500'>
+         <button
+            className='flex size-[63px] flex-col items-center justify-center gap-1 rounded-[5px] bg-white500'
+            onClick={handleLogout}
+         >
             <div className='size-[20px] text-gray500'>
                <LogoutIcon />
             </div>
             <p className='text-[10px] font-semibold leading-[14px] text-gray500'>
                Logout
             </p>
-         </div>
+         </button>
       </div>
    );
 };

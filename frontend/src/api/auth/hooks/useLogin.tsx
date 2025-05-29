@@ -1,15 +1,14 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
-import authClientRequests from '../authClientRequests';
-import { IAuthResponse, ILoginData } from '../types';
+import { authApi } from '../requests';
+import { IAuthResponse, ILoginPayload } from '../types';
 
 const useLogin = (
-  options?: UseMutationOptions<IAuthResponse, Error, ILoginData, unknown>
+   options?: UseMutationOptions<IAuthResponse, Error, ILoginPayload, unknown>
 ) => {
-  return useMutation<IAuthResponse, Error, ILoginData, unknown>({
-    mutationFn: (data: ILoginData) =>
-      authClientRequests.loginWithPassword(data),
-    ...options,
-  });
+   return useMutation<IAuthResponse, Error, ILoginPayload, unknown>({
+      mutationFn: (data: ILoginPayload) => authApi.client.login(data),
+      ...options,
+   });
 };
 
 export default useLogin;

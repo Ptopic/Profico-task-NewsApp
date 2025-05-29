@@ -8,6 +8,7 @@ import metadataConfig from '../metadata';
 import App from './App';
 import { inter } from './fonts';
 import './globals.css';
+import Providers from '@shared/providers';
 
 export const metadata = metadataConfig;
 
@@ -24,13 +25,13 @@ export default async function RootLayout({
             id='app'
             className={twMerge(
                inter.variable,
-               'bg-white600 overscroll-none font-sans'
+               'overscroll-none bg-white600 font-sans'
             )}
          >
             <App>
                <NextTopLoader color='#BB1E1E' showSpinner={false} />
                <ScrollToTop />
-               {children}
+               <Providers>{children}</Providers>
             </App>
          </body>
       </html>

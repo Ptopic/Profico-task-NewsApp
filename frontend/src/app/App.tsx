@@ -1,6 +1,5 @@
 'use client';
 
-import Providers from '@shared/providers';
 import { ReactNode } from 'react';
 
 interface IProps {
@@ -8,7 +7,7 @@ interface IProps {
 }
 
 const App = ({ children }: IProps) => {
-   return <Providers>{children}</Providers>;
+   return <>{children}</>;
 };
 
 export default App;

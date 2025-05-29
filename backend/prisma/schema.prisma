@@ -20,6 +20,43 @@ model User {
 
   email    String @unique
   password String
+  firstName String
+  lastName String
+  isEmailVerified Boolean @default(false)
+  
+  resetPasswordRequests ResetPasswordRequest[]
+  emailConfirmationRequests EmailConfirmationRequest[]
+}
+
+model ResetPasswordRequest {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  token     String   @unique
+  expiresAt DateTime
+  email String
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model EmailConfirmationRequest {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  token     String   @unique
+  expiresAt DateTime
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  
+  @@index([token])
+  @@index([expiresAt])
 }
 
 // model UserScratchedCard {

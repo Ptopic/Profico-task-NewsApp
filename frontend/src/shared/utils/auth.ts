@@ -11,7 +11,7 @@ export const getAccessToken = async () => {
 export const setAuthTokens = async (authResponse: IAuthResponse) => {
    setCookie({
       name: COOKIE_NAME.ACCESS_TOKEN,
-      value: authResponse.accessToken,
+      value: authResponse.token,
       maxAge: 60 * 60 * 24 * 30,
    });
 };

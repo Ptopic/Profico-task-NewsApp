@@ -1,10 +1,9 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { newsApi } from '@api/news/requests';
 import HomePage from '@features/home';
-import { COOKIE_NAME } from '@shared/constants';
 import { getSSRQueryClient } from '@shared/queryClient';
 import { NEWS_LATEST, NEWS_TOP_HEADLINES } from '@shared/queryKeys';
-import { getCookie, getMetadataTitle } from '@shared/utils';
+import { getMetadataTitle } from '@shared/utils';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { openGraphImage } from 'metadata/openGraphImage';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -40,9 +39,6 @@ const Home = async () => {
    ]);
 
    const dehydratedState = dehydrate(queryClient);
-
-   const cookie = await getCookie(COOKIE_NAME.ACCESS_TOKEN);
-   console.log(cookie);
    return (
       <HydrationBoundary state={dehydratedState}>
          <HomePage />

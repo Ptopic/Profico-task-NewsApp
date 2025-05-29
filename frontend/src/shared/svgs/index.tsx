@@ -1,5 +1,7 @@
 export { default as ChevronRightIcon } from '@assets/icons/chevron-right.svg';
 export { default as CloseIcon } from '@assets/icons/close.svg';
+export { default as EyeOffIcon } from '@assets/icons/eye-off.svg';
+export { default as EyeOnIcon } from '@assets/icons/eye-on.svg';
 export { default as HamburgerIcon } from '@assets/icons/hamburger.svg';
 export { default as SearchIcon } from '@assets/icons/search.svg';
 

@@ -1,4 +1,4 @@
-import { User } from '../users/user.entity';
+import { User } from '@prisma/client';
 
 declare module 'express' {
 	interface Request {
