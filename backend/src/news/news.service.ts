@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NewsService {
@@ -24,7 +24,7 @@ export class NewsService {
 
 			const response = await fetch(url);
 			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				throw new BadRequestException(response.statusText);
 			}
 
 			const data = await response.json();
@@ -54,8 +54,9 @@ export class NewsService {
 			const url = `${this.newsApiBaseUrl}/everything?${params}`;
 
 			const response = await fetch(url);
+
 			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				throw new BadRequestException(response.statusText);
 			}
 
 			const data = await response.json();
