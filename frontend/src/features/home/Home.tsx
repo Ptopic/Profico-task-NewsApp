@@ -258,6 +258,7 @@ const HomePage = () => {
                   {selectedTab === 'Featured' ? (
                      !isLoading &&
                      !isLoadingFavourites &&
+                     !isFetchingFavourites &&
                      articles.length === 0 &&
                      category !== 'favourites' ? (
                         <div className='flex h-[50%] w-full items-center justify-center'>
@@ -277,7 +278,11 @@ const HomePage = () => {
                         </div>
                      ) : (
                         <LoadingWrapper
-                           isLoading={isLoading || isLoadingFavourites}
+                           isLoading={
+                              isLoading ||
+                              isLoadingFavourites ||
+                              isFetchingFavourites
+                           }
                            className='h-[70dvh]'
                         >
                            <div className='flex h-full flex-col gap-6 pb-10'>
