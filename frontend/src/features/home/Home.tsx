@@ -18,11 +18,12 @@ import usePaginationParams from '@shared/hooks/usePaginationParams';
 import { toastError } from '@shared/utils/toast';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const HomePage = () => {
    const router = useRouter();
+   const loadingRef = useRef<HTMLDivElement>(null);
 
    const NEWS_PAGE_SIZE = 50;
 
@@ -76,24 +77,31 @@ const HomePage = () => {
       },
    });
 
-   const handleEndReached = useCallback(() => {
-      if (hasNextPage && !isFetchingNextPage) {
-         fetchNextPage();
-      }
-   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
    useEffect(() => {
-      const handleScroll = () => {
-         if (
-            window.innerHeight + window.scrollY >=
-            document.body.offsetHeight
-         ) {
-            handleEndReached();
+      const observer = new IntersectionObserver(
+         (entries) => {
+            const target = entries[0];
+            if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+               fetchNextPage();
+            }
+         },
+         {
+            root: null,
+            rootMargin: '100px',
+            threshold: 0.1,
+         }
+      );
+
+      if (loadingRef.current) {
+         observer.observe(loadingRef.current);
+      }
+
+      return () => {
+         if (loadingRef.current) {
+            observer.unobserve(loadingRef.current);
          }
       };
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-   }, [handleEndReached]);
+   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
    useEffect(() => {
       window.scrollTo({ top: 0 });
@@ -101,19 +109,24 @@ const HomePage = () => {
 
    useEffect(() => {
       let resizeTimeout: NodeJS.Timeout | null = null;
+      let lastWidth = window.innerWidth;
 
       const handleRefetch = () => {
-         if (resizeTimeout) clearTimeout(resizeTimeout);
-         resizeTimeout = setTimeout(() => {
-            router.push(
-               window.innerWidth > 1150
-                  ? `?search=${searchTerm}`
-                  : `?search=${mobileSearchTerm}`
-            );
-            window.innerWidth > 1150 && setSelectedTab('Featured');
-            refetch();
-            refetchFavourites();
-         }, 400);
+         const currentWidth = window.innerWidth;
+         if (currentWidth !== lastWidth) {
+            lastWidth = currentWidth;
+            if (resizeTimeout) clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+               router.push(
+                  currentWidth > 1150
+                     ? `?search=${searchTerm}`
+                     : `?search=${mobileSearchTerm}`
+               );
+               currentWidth > 1150 && setSelectedTab('Featured');
+               // refetch();
+               // refetchFavourites();
+            }, 400);
+         }
       };
 
       window.addEventListener('resize', handleRefetch);
@@ -302,6 +315,7 @@ const HomePage = () => {
                                     isFetchingNextPage={isFetchingNextPage}
                                  />
                               )}
+                              <div ref={loadingRef} className='h-10' />
                            </div>
                         </LoadingWrapper>
                      )

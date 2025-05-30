@@ -57,7 +57,7 @@ const Modal = ({
             <TransitionComponent>
                <div
                   className={twMerge(
-                     'bg-overlay fixed inset-0 bg-opacity-80 transition-opacity',
+                     'fixed inset-0 bg-overlay bg-opacity-80 transition-opacity',
                      modalBgClassName
                   )}
                />
@@ -67,7 +67,7 @@ const Modal = ({
                   <TransitionComponent>
                      <Dialog.Panel
                         className={twMerge(
-                           'relative flex h-full max-h-[90vh] w-full max-w-[592px] transform flex-col overflow-hidden rounded-md bg-white500 text-left shadow-xl transition-all',
+                           'relative flex h-full max-h-[90dvh] w-full max-w-[592px] transform flex-col overflow-hidden rounded-md bg-white500 text-left shadow-xl transition-all',
                            className
                         )}
                      >
@@ -117,7 +117,7 @@ const Modal = ({
                                  <div className='relative z-20'>
                                     <CloseIcon
                                        aria-hidden='true size-4'
-                                       className='text-gray600 size-4'
+                                       className='size-4 text-gray600'
                                     />
                                  </div>
                               </div>
