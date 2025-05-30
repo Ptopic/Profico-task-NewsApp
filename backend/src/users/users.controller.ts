@@ -19,21 +19,8 @@ export class UsersController {
 
 	@Get('favourites')
 	@JwtAuth()
-	async getFavourites(
-		@Req() req: Request,
-		@Query('page') page: string,
-		@Query('pageSize') pageSize: string,
-		@Query('searchQuery') searchQuery?: string
-	) {
-		const { favourites, totalFavourites } =
-			await this.usersService.getFavourites(
-				req.user.id,
-				page,
-				pageSize,
-				searchQuery
-			);
-
-		return { data: favourites, totalCount: totalFavourites };
+	async getFavourites(@Req() req: Request, @Query('search') search: string) {
+		return await this.usersService.getFavourites(req.user.id, search);
 	}
 
 	@Post('favourites')

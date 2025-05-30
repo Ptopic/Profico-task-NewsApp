@@ -6,32 +6,18 @@ import { AddArticleToFavouritesDto } from './dtos/addArticleToFavourites.dto';
 export class UsersService {
 	constructor(private prisma: PrismaService) {}
 
-	async getFavourites(
-		userId: number,
-		page: string,
-		pageSize: string,
-		searchQuery?: string
-	) {
-		const favourites = await this.prisma.favouriteArticle.findMany({
+	async getFavourites(userId: number, search?: string) {
+		return await this.prisma.favouriteArticle.findMany({
 			where: {
 				userId,
-				title: { contains: searchQuery, mode: 'insensitive' },
+				...(search && {
+					title: { contains: search, mode: 'insensitive' },
+				}),
 			},
-			skip: (parseInt(page) - 1) * parseInt(pageSize),
-			take: parseInt(pageSize),
 			orderBy: {
 				createdAt: 'desc',
 			},
 		});
-
-		const totalFavourites = await this.prisma.favouriteArticle.count({
-			where: {
-				userId,
-				title: { contains: searchQuery, mode: 'insensitive' },
-			},
-		});
-
-		return { favourites, totalFavourites };
 	}
 
 	async addFavourite(userId: number, data: AddArticleToFavouritesDto) {

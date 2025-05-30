@@ -4,17 +4,20 @@ import { Article, BreakingNewsArticle } from '@components/article';
 import LatestNews from '@components/latestNews';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import { AnimatePresence } from 'framer-motion';
+import { Dispatch, SetStateAction } from 'react';
 import AnimatedGridItem from './AnimatedGridItem';
 
 interface IProps {
    articles: IArticle[];
    favouriteArticles: IFavouriteArticle[];
+   setFavouriteArticles: Dispatch<SetStateAction<IFavouriteArticle[]>>;
    isFetchingNextPage: boolean;
 }
 
 const HomeArticlesGrid = ({
    articles,
    favouriteArticles,
+   setFavouriteArticles,
    isFetchingNextPage,
 }: IProps) => {
    return (
@@ -31,6 +34,7 @@ const HomeArticlesGrid = ({
                         <Article
                            article={article}
                            favouriteArticles={favouriteArticles}
+                           setFavouriteArticles={setFavouriteArticles}
                         />
                      </AnimatedGridItem>
                   ))}
@@ -63,6 +67,7 @@ const HomeArticlesGrid = ({
                         <Article
                            article={article}
                            favouriteArticles={favouriteArticles}
+                           setFavouriteArticles={setFavouriteArticles}
                         />
                      </AnimatedGridItem>
                   ))}

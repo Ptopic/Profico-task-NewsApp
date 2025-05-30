@@ -2,22 +2,24 @@ import { IArticle } from '@api/news/types';
 import useAddToFavourites from '@api/user/hooks/useAddToFavourites';
 import useRemoveFromFavourites from '@api/user/hooks/useRemoveFromFavourites';
 import { IFavouriteArticle } from '@api/user/types';
-import { FAVOURITES } from '@shared/queryKeys';
 import { toastError, toastSuccess } from '@shared/utils/toast';
-import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface IProps {
    article: IArticle;
    favouriteArticles: IFavouriteArticle[];
+   setFavouriteArticles: Dispatch<SetStateAction<IFavouriteArticle[]>>;
 }
 
-const Article = ({ article, favouriteArticles }: IProps) => {
-   const queryClient = useQueryClient();
+const Article = ({
+   article,
+   favouriteArticles,
+   setFavouriteArticles,
+}: IProps) => {
    const [imgLoadingError, setImgLoadingError] = useState(false);
 
    const isFavourite = (url: string): boolean => {
@@ -32,7 +34,11 @@ const Article = ({ article, favouriteArticles }: IProps) => {
 
    const { mutate: addToFavourites } = useAddToFavourites({
       onSuccess: () => {
-         queryClient.invalidateQueries({ queryKey: [FAVOURITES] });
+         setFavouriteArticles([
+            article as unknown as IFavouriteArticle,
+            ...favouriteArticles,
+         ]);
+
          toastSuccess({
             title: 'Article added to favourites',
          });
@@ -47,7 +53,12 @@ const Article = ({ article, favouriteArticles }: IProps) => {
 
    const { mutate: removeFromFavourites } = useRemoveFromFavourites({
       onSuccess: () => {
-         queryClient.invalidateQueries({ queryKey: [FAVOURITES] });
+         setFavouriteArticles(
+            favouriteArticles.filter(
+               (favArticle) => favArticle.url !== article.url
+            )
+         );
+
          toastSuccess({
             title: 'Article removed from favourites',
          });

@@ -2,12 +2,14 @@ import { IArticle } from '@api/news/types';
 import { IFavouriteArticle } from '@api/user/types';
 import Article from '@components/article/Article';
 import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
+import { Dispatch, SetStateAction } from 'react';
 import AnimatedGridItem from './AnimatedGridItem';
 
 interface IProps {
    category: string;
    articles: IArticle[];
    favouriteArticles: IFavouriteArticle[];
+   setFavouriteArticles: Dispatch<SetStateAction<IFavouriteArticle[]>>;
    isFetchingNextPage: boolean;
 }
 
@@ -15,6 +17,7 @@ const RegularArticlesGrid = ({
    category,
    articles,
    favouriteArticles,
+   setFavouriteArticles,
    isFetchingNextPage,
 }: IProps) => {
    return (
@@ -29,6 +32,7 @@ const RegularArticlesGrid = ({
                     <Article
                        article={article as unknown as IArticle}
                        favouriteArticles={favouriteArticles}
+                       setFavouriteArticles={setFavouriteArticles}
                     />
                  </AnimatedGridItem>
               ))
@@ -41,6 +45,7 @@ const RegularArticlesGrid = ({
                     <Article
                        article={article}
                        favouriteArticles={favouriteArticles}
+                       setFavouriteArticles={setFavouriteArticles}
                     />
                  </AnimatedGridItem>
               ))}

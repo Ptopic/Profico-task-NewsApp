@@ -1,69 +1,12 @@
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { FAVOURITES } from '@shared/queryKeys';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { userApi } from '../requests';
+import { IFavouriteArticle } from '../types';
 
-const useGetFavourites = (
-   search?: string,
-   pageSize: number = DEFAULT_PAGE_SIZE,
-   options?: { onError: (error: Error) => void }
-) => {
-   const {
-      data,
-      isLoading,
-      isFetchingNextPage,
-      hasNextPage,
-      fetchNextPage,
-      error,
-      refetch,
-   } = useInfiniteQuery({
-      queryKey: [FAVOURITES, search, pageSize],
-      queryFn: async ({ pageParam }) => {
-         const response = await userApi.client.getFavourites(
-            search,
-            pageParam as number,
-            pageSize
-         );
-
-         const lastPage = Math.ceil(response.totalCount / Number(pageSize));
-
-         return {
-            ...response,
-            current_page: Number(pageParam),
-            per_page: Number(pageSize),
-            last_page: lastPage,
-         };
-      },
-      getNextPageParam: (nextPageRequest) => {
-         if (nextPageRequest.current_page < nextPageRequest.last_page) {
-            return nextPageRequest.current_page + 1;
-         }
-         return undefined;
-      },
-      initialPageParam: DEFAULT_PAGE,
+const useGetFavourites = (search?: string) =>
+   useQuery<IFavouriteArticle[]>({
+      queryKey: [FAVOURITES, search],
+      queryFn: () => userApi.client.getFavourites(search),
    });
-
-   useEffect(() => {
-      if (error && options?.onError) {
-         options.onError(error);
-      }
-   }, [error, options?.onError]);
-
-   const favourites =
-      data?.pages
-         .flatMap((page) => page.data || [])
-         .filter((item) => item != null) || [];
-
-   return {
-      favourites,
-      isLoading,
-      isFetchingNextPage,
-      hasNextPage,
-      fetchNextPage,
-      error,
-      refetch,
-   };
-};
 
 export default useGetFavourites;

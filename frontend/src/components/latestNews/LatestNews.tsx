@@ -7,7 +7,7 @@ import PulsatingDotsSpinner from '@components/pulsatingDotsSpinner';
 import { DEFAULT_ERROR_MESSAGE } from '@shared/constants';
 import { ChevronRightIcon } from '@shared/svgs';
 import { toastError } from '@shared/utils/toast';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import LatestNewsDivider from './LatestNewsDivider';
 import LatestNewsItem from './LatestNewsItem';
 
@@ -24,7 +24,14 @@ const LatestNews = () => {
       hasNextPage,
       fetchNextPage,
       error,
-   } = useGetLatestNews(LATEST_NEWS_PAGE_SIZE);
+   } = useGetLatestNews(LATEST_NEWS_PAGE_SIZE, {
+      onError: (error) => {
+         toastError({
+            title: DEFAULT_ERROR_MESSAGE,
+            description: error.message,
+         });
+      },
+   });
 
    const handleEndReached = useCallback(() => {
       // Error is here because news api has limit of 100 articles on developer account so we cant fetch articles from 100 and more
@@ -32,15 +39,6 @@ const LatestNews = () => {
          fetchNextPage();
       }
    }, [hasNextPage, isFetchingNextPage, fetchNextPage, error]);
-
-   useEffect(() => {
-      if (error) {
-         toastError({
-            title: DEFAULT_ERROR_MESSAGE,
-            description: error.message,
-         });
-      }
-   }, [error]);
 
    const latestNewsGridRef = useRef<HTMLDivElement>(null);
 

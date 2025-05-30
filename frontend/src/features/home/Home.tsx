@@ -2,6 +2,7 @@
 
 import useGetTopHeadlinesNews from '@api/news/hooks/useGetTopHeadlinesNews';
 import useGetFavourites from '@api/user/hooks/useGetFavourites';
+import { IFavouriteArticle } from '@api/user/types';
 import {
    HomeArticlesGrid,
    RegularArticlesGrid,
@@ -39,14 +40,25 @@ const HomePage = () => {
    const [selectedTab, setSelectedTab] = useState<string>('Featured');
 
    const {
-      favourites,
+      data: favourites,
       isLoading: isLoadingFavourites,
-      isFetchingNextPage: isFetchingNextPageFavourites,
-      hasNextPage: hasNextPageFavourites,
-      fetchNextPage: fetchNextPageFavourites,
-      error: errorFavourites,
+      isFetching: isFetchingFavourites,
       refetch: refetchFavourites,
-   } = useGetFavourites(searchValue, NEWS_PAGE_SIZE);
+   } = useGetFavourites(searchValue);
+
+   const [favouriteArticles, setFavouriteArticles] = useState<
+      IFavouriteArticle[]
+   >([]);
+
+   useEffect(() => {
+      if (!isLoadingFavourites && !isFetchingFavourites) {
+         setFavouriteArticles(favourites || []);
+      }
+   }, [isLoadingFavourites, isFetchingFavourites, favourites]);
+
+   useEffect(() => {
+      refetchFavourites();
+   }, [searchValue]);
 
    const {
       articles,
@@ -54,29 +66,21 @@ const HomePage = () => {
       isFetchingNextPage,
       hasNextPage,
       fetchNextPage,
-      error,
       refetch,
-   } = useGetTopHeadlinesNews(searchValue, category, NEWS_PAGE_SIZE);
+   } = useGetTopHeadlinesNews(searchValue, category, NEWS_PAGE_SIZE, {
+      onError: (error) => {
+         toastError({
+            title: DEFAULT_ERROR_MESSAGE,
+            description: error.message,
+         });
+      },
+   });
 
    const handleEndReached = useCallback(() => {
-      if (category === 'favourites') {
-         if (hasNextPageFavourites && !isFetchingNextPageFavourites) {
-            fetchNextPageFavourites();
-         }
-      } else {
-         if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-         }
+      if (hasNextPage && !isFetchingNextPage) {
+         fetchNextPage();
       }
-   }, [
-      category,
-      hasNextPage,
-      isFetchingNextPage,
-      fetchNextPage,
-      hasNextPageFavourites,
-      isFetchingNextPageFavourites,
-      fetchNextPageFavourites,
-   ]);
+   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
    useEffect(() => {
       const handleScroll = () => {
@@ -94,15 +98,6 @@ const HomePage = () => {
    useEffect(() => {
       window.scrollTo({ top: 0 });
    }, [category]);
-
-   useEffect(() => {
-      if (error || errorFavourites) {
-         toastError({
-            title: DEFAULT_ERROR_MESSAGE,
-            description: error?.message || errorFavourites?.message,
-         });
-      }
-   }, [error, errorFavourites]);
 
    useEffect(() => {
       let resizeTimeout: NodeJS.Timeout | null = null;
@@ -126,7 +121,7 @@ const HomePage = () => {
          window.removeEventListener('resize', handleRefetch);
          if (resizeTimeout) clearTimeout(resizeTimeout);
       };
-   }, [refetch, refetchFavourites, mobileSearchTerm, searchTerm]);
+   }, [refetch, mobileSearchTerm, searchTerm]);
 
    return (
       <div className='h-full w-full'>
@@ -272,7 +267,8 @@ const HomePage = () => {
                         </div>
                      ) : !isLoading &&
                        !isLoadingFavourites &&
-                       favourites.length === 0 &&
+                       !isFetchingFavourites &&
+                       favouriteArticles.length === 0 &&
                        category === 'favourites' ? (
                         <div className='flex h-[50%] w-full items-center justify-center'>
                            <p className='text-[28px] font-black leading-[21px] text-black500'>
@@ -288,21 +284,17 @@ const HomePage = () => {
                               {category === '' && searchValue === '' ? (
                                  <HomeArticlesGrid
                                     articles={articles}
-                                    favouriteArticles={favourites}
-                                    isFetchingNextPage={
-                                       isFetchingNextPage ||
-                                       isFetchingNextPageFavourites
-                                    }
+                                    favouriteArticles={favouriteArticles}
+                                    setFavouriteArticles={setFavouriteArticles}
+                                    isFetchingNextPage={isFetchingNextPage}
                                  />
                               ) : (
                                  <RegularArticlesGrid
                                     category={category}
                                     articles={articles}
-                                    favouriteArticles={favourites}
-                                    isFetchingNextPage={
-                                       isFetchingNextPage ||
-                                       isFetchingNextPageFavourites
-                                    }
+                                    favouriteArticles={favouriteArticles}
+                                    setFavouriteArticles={setFavouriteArticles}
+                                    isFetchingNextPage={isFetchingNextPage}
                                  />
                               )}
                            </div>
