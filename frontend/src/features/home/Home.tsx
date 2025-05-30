@@ -247,7 +247,7 @@ const HomePage = () => {
             </div>
             <div className='hidden h-[1px] w-full flex-shrink-0 bg-divider/10 lg:flex'></div>
             <div className='flex h-full w-full flex-row gap-6 pb-2'>
-               <div className='top-[90px] hidden h-[calc(100vh-90px)] lg:sticky lg:flex'>
+               <div className='top-[90px] hidden h-[calc(100dvh-90px)] lg:sticky lg:flex'>
                   <Sidebar category={category} setCategory={setCategory} />
                </div>
                <div className='flex w-full flex-col gap-2'>
