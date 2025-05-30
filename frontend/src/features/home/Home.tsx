@@ -123,8 +123,6 @@ const HomePage = () => {
                      : `?search=${mobileSearchTerm}`
                );
                currentWidth > 1150 && setSelectedTab('Featured');
-               // refetch();
-               // refetchFavourites();
             }, 400);
          }
       };
@@ -315,7 +313,9 @@ const HomePage = () => {
                                     isFetchingNextPage={isFetchingNextPage}
                                  />
                               )}
-                              <div ref={loadingRef} className='h-10' />
+                              {hasNextPage && (
+                                 <div ref={loadingRef} className='h-4' />
+                              )}
                            </div>
                         </LoadingWrapper>
                      )
