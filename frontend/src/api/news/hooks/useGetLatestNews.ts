@@ -1,10 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { newsApi } from '@api/news/requests';
 import { NEWS_LATEST } from '@shared/queryKeys';
 
-const useGetLatestNews = (pageSize: number = DEFAULT_PAGE_SIZE) => {
+const useGetLatestNews = (
+   pageSize: number = DEFAULT_PAGE_SIZE,
+   options?: { onError: (error: Error) => void }
+) => {
    const {
       data,
       isLoading,
@@ -37,6 +41,12 @@ const useGetLatestNews = (pageSize: number = DEFAULT_PAGE_SIZE) => {
       },
       initialPageParam: DEFAULT_PAGE,
    });
+
+   useEffect(() => {
+      if (error && options?.onError) {
+         options.onError(error);
+      }
+   }, [error, options?.onError]);
 
    const articles =
       data?.pages

@@ -2,11 +2,13 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { NEWS_TOP_HEADLINES } from '@shared/queryKeys';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { newsApi } from '../requests';
+import { useEffect } from 'react';
 
 const useGetTopHeadlinesNews = (
    search?: string,
    category?: string,
-   pageSize: number = DEFAULT_PAGE_SIZE
+   pageSize: number = DEFAULT_PAGE_SIZE,
+   options?: { onError: (error: Error) => void }
 ) => {
    const {
       data,
@@ -43,6 +45,12 @@ const useGetTopHeadlinesNews = (
       },
       initialPageParam: DEFAULT_PAGE,
    });
+
+   useEffect(() => {
+      if (error && options?.onError) {
+         options.onError(error);
+      }
+   }, [error, options?.onError]);
 
    const articles =
       data?.pages

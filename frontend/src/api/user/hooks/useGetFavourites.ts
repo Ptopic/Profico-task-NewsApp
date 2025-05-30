@@ -1,11 +1,13 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@api/constants';
 import { FAVOURITES } from '@shared/queryKeys';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { userApi } from '../requests';
 
 const useGetFavourites = (
    search?: string,
-   pageSize: number = DEFAULT_PAGE_SIZE
+   pageSize: number = DEFAULT_PAGE_SIZE,
+   options?: { onError: (error: Error) => void }
 ) => {
    const {
       data,
@@ -17,10 +19,10 @@ const useGetFavourites = (
       refetch,
    } = useInfiniteQuery({
       queryKey: [FAVOURITES, search, pageSize],
-      queryFn: async ({ pageParam = DEFAULT_PAGE }) => {
+      queryFn: async ({ pageParam }) => {
          const response = await userApi.client.getFavourites(
             search,
-            pageParam,
+            pageParam as number,
             pageSize
          );
 
@@ -41,6 +43,12 @@ const useGetFavourites = (
       },
       initialPageParam: DEFAULT_PAGE,
    });
+
+   useEffect(() => {
+      if (error && options?.onError) {
+         options.onError(error);
+      }
+   }, [error, options?.onError]);
 
    const favourites =
       data?.pages
