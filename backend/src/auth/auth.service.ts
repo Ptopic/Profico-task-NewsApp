@@ -114,7 +114,10 @@ export class AuthService {
 				},
 			});
 
-		if (existingResetPasswordRequest) {
+		if (
+			existingResetPasswordRequest &&
+			existingResetPasswordRequest.expiresAt > new Date()
+		) {
 			throw new BusinessError('A reset password request already exists');
 		}
 
@@ -230,7 +233,7 @@ export class AuthService {
 		}
 
 		if (emailConfirmationRequest.expiresAt < new Date()) {
-			throw new BusinessError('Token expired');
+			throw new BusinessError('Invalid or expired token');
 		}
 
 		await this.prisma.emailConfirmationRequest.delete({
