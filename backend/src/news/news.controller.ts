@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { NewsService } from './news.service';
 
 @Controller('news')
@@ -6,6 +7,10 @@ export class NewsController {
 	constructor(private readonly newsService: NewsService) {}
 
 	@Get('top-headlines')
+	@ApiQuery({ name: 'search', required: false })
+	@ApiQuery({ name: 'category', required: false })
+	@ApiQuery({ name: 'page', required: true })
+	@ApiQuery({ name: 'pageSize', required: true })
 	async getTopHeadlinesNews(
 		@Query('search') search?: string,
 		@Query('category') category?: string,
@@ -21,6 +26,8 @@ export class NewsController {
 	}
 
 	@Get('latest')
+	@ApiQuery({ name: 'page', required: true })
+	@ApiQuery({ name: 'pageSize', required: true })
 	async getLatestNews(
 		@Query('page') page: number = 1,
 		@Query('pageSize') pageSize: number = 20

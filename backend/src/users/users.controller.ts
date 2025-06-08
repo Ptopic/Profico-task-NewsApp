@@ -7,6 +7,7 @@ import {
 	Query,
 	Req,
 } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuth } from 'src/auth/decorators/jwt-auth.decorator';
 import { AddArticleToFavouritesDto } from './dtos/addArticleToFavourites.dto';
@@ -19,6 +20,7 @@ export class UsersController {
 
 	@Get('favourites')
 	@JwtAuth()
+	@ApiQuery({ name: 'search', required: false })
 	async getFavourites(@Req() req: Request, @Query('search') search: string) {
 		return await this.usersService.getFavourites(req.user.id, search);
 	}
