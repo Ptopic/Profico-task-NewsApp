@@ -70,7 +70,7 @@ frontend/
 │   │   ├── App.tsx                # Main app component
 │   │   └── favicon.ico            # Site favicon
 │   ├── components/                # Reusable UI components
-│   ├── features/                  # Feature-based modules - Page components for each page in app directory
+│   ├── features/                  # Page components for each page in app directory
 │   ├── shared/                    # Shared utilities and configurations
 │   ├── api/                       # API files - React query hooks, requests and request builder
 │   ├── assets/                    # Static assets
@@ -176,8 +176,8 @@ As part of the task requirements, we needed to implement a way to bookmark artic
 
 **Implementation Approach:**
 
-- Added a small bookmark icon positioned to the right of article titles
-- **Integration**: Added bookmark icon to the sidebar, treating bookmarks as a standard category
+- Added a small bookmark icon (star) positioned to the right of article titles
+- Added bookmark icon to the sidebar, treating bookmarks as a standard category
 
 ### Disclaimers
 
