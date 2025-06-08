@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { BusinessError } from 'src/exceptions';
 
 @Injectable()
 export class NewsService {
@@ -24,7 +25,7 @@ export class NewsService {
 
 			const response = await fetch(url);
 			if (!response.ok) {
-				throw new BadRequestException(response.statusText);
+				throw new BusinessError(response.statusText);
 			}
 
 			const data = await response.json();
@@ -56,7 +57,7 @@ export class NewsService {
 			const response = await fetch(url);
 
 			if (!response.ok) {
-				throw new BadRequestException(response.statusText);
+				throw new BusinessError(response.statusText);
 			}
 
 			const data = await response.json();
