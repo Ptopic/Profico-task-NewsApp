@@ -13,8 +13,8 @@ async function bootstrap() {
 	app.useGlobalFilters(new BusinessErrorFilter());
 
 	const config = new DocumentBuilder()
-		.setTitle('Scratch adventures api')
-		.setDescription('The API for the Scratch adventures project')
+		.setTitle('MyNews API')
+		.setDescription('The API for the MyNews project')
 		.addBearerAuth({
 			type: 'http',
 			scheme: 'bearer',
